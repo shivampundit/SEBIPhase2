@@ -74,6 +74,9 @@ vector<vector<int>> matrix = {{1, 2, 3}, {4, 5, 6}, {7, 8, 9}};
 
 ### Java
 ```java
+import java.util.ArrayList;
+import java.util.Arrays;
+
 // Declaration
 int[] arr = new int[5];
 
@@ -82,7 +85,6 @@ int[] arr = {1, 2, 3, 4, 5};
 int[] arr = new int[]{1, 2, 3, 4, 5};
 
 // Using ArrayList (dynamic)
-import java.util.ArrayList;
 ArrayList<Integer> arr = new ArrayList<>();
 ArrayList<Integer> arr = new ArrayList<>(Arrays.asList(1, 2, 3, 4, 5));
 
@@ -500,6 +502,8 @@ int main() {
 
 ##### C++
 ```cpp
+#include <algorithm>
+
 int linear_search(vector<int>& arr, int target) {
     /*
      * Search for target element
@@ -603,6 +607,8 @@ int main() {
 
 ##### C++
 ```cpp
+#include <algorithm>
+
 int binary_search(vector<int>& arr, int target) {
     /*
      * Binary search on sorted array
@@ -770,6 +776,9 @@ int main() {
 
 #### Java
 ```java
+import java.util.ArrayList;
+import java.util.Collections;
+
 public static void reverseArray(int[] arr) {
     /*
      * Reverse array in-place

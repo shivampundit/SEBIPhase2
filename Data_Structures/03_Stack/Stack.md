@@ -495,6 +495,8 @@ int main() {
 
 #### C++
 ```cpp
+#include <unordered_map>
+
 bool isBalanced(string expression) {
     /*
      * Check if parentheses are balanced
