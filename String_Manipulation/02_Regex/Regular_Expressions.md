@@ -1,7 +1,7 @@
-# Regular Expressions - Comprehensive Notes
+# Regular Expressions - Comprehensive Multi-Language Notes
 
 ## Overview
-Regular Expressions (regex) are patterns used to match character combinations in strings. Powerful tool for text search, validation, and manipulation.
+Regular Expressions (regex) are patterns used to match character combinations in strings. Powerful tool for text search, validation, and manipulation across all programming languages.
 
 ### Key Uses
 - Pattern matching
@@ -10,10 +10,22 @@ Regular Expressions (regex) are patterns used to match character combinations in
 - Data extraction
 - Input sanitization
 
+### Language Support Comparison
+
+| Feature | Python (`re`) | C (POSIX) | C++ (`<regex>`) | Java (`Pattern`) |
+|---------|--------------|-----------|-----------------|------------------|
+| **Standard** | Built-in | POSIX regex | C++11+ | Built-in |
+| **Performance** | Good | Fast | Good | Good |
+| **Syntax** | Perl-like | POSIX ERE | ECMAScript | Java flavor |
+| **Unicode** | Full | Limited | Full | Full |
+
 ---
 
-## Python re Module
+## Basic Pattern Matching
 
+### Python re Module
+
+#### Python
 ```python
 import re
 
@@ -22,6 +34,132 @@ pattern = r'\d+'  # One or more digits
 text = "I have 25 apples and 30 oranges"
 matches = re.findall(pattern, text)
 print(matches)  # ['25', '30']
+
+# Search for pattern
+match = re.search(r'\d+', text)
+if match:
+    print(f"Found: {match.group()}")  # Found: 25
+
+# Match at start
+if re.match(r'I have', text):
+    print("Text starts with 'I have'")
+```
+
+#### C (POSIX Regex)
+```c
+#include <stdio.h>
+#include <regex.h>
+#include <string.h>
+
+int main() {
+    regex_t regex;
+    regmatch_t matches[10];
+    char text[] = "I have 25 apples and 30 oranges";
+    
+    // Compile regex pattern
+    // REG_EXTENDED = Extended Regular Expressions
+    if (regcomp(&regex, "[0-9]+", REG_EXTENDED) != 0) {
+        printf("Failed to compile regex\n");
+        return 1;
+    }
+    
+    // Execute regex
+    if (regexec(&regex, text, 1, matches, 0) == 0) {
+        printf("Match found at position %d\n", matches[0].rm_so);
+        
+        // Extract matched text
+        int start = matches[0].rm_so;
+        int end = matches[0].rm_eo;
+        int len = end - start;
+        char matched[len + 1];
+        strncpy(matched, text + start, len);
+        matched[len] = '\0';
+        printf("Matched: %s\n", matched);  // Matched: 25
+    }
+    
+    // Free regex
+    regfree(&regex);
+    
+    return 0;
+}
+```
+
+#### C++
+```cpp
+#include <iostream>
+#include <regex>
+#include <string>
+using namespace std;
+
+int main() {
+    string text = "I have 25 apples and 30 oranges";
+    regex pattern(R"(\d+)");  // One or more digits
+    
+    // Find first match
+    smatch match;
+    if (regex_search(text, match, pattern)) {
+        cout << "Found: " << match.str() << endl;  // Found: 25
+        cout << "Position: " << match.position() << endl;  // Position: 7
+    }
+    
+    // Find all matches
+    cout << "All matches: ";
+    auto begin = sregex_iterator(text.begin(), text.end(), pattern);
+    auto end = sregex_iterator();
+    
+    for (auto it = begin; it != end; ++it) {
+        cout << it->str() << " ";  // 25 30
+    }
+    cout << endl;
+    
+    // Match at start
+    regex start_pattern(R"(^I have)");
+    if (regex_search(text, start_pattern)) {
+        cout << "Text starts with 'I have'" << endl;
+    }
+    
+    return 0;
+}
+```
+
+#### Java
+```java
+import java.util.regex.*;
+
+public class BasicRegex {
+    public static void main(String[] args) {
+        String text = "I have 25 apples and 30 oranges";
+        String pattern = "\\d+";  // One or more digits (escaped backslash)
+        
+        // Find first match
+        Pattern p = Pattern.compile(pattern);
+        Matcher m = p.matcher(text);
+        
+        if (m.find()) {
+            System.out.println("Found: " + m.group());      // Found: 25
+            System.out.println("Position: " + m.start());   // Position: 7
+        }
+        
+        // Find all matches
+        System.out.print("All matches: ");
+        m.reset();  // Reset matcher to find from start
+        while (m.find()) {
+            System.out.print(m.group() + " ");  // 25 30
+        }
+        System.out.println();
+        
+        // Match at start
+        Pattern startPattern = Pattern.compile("^I have");
+        if (startPattern.matcher(text).find()) {
+            System.out.println("Text starts with 'I have'");
+        }
+        
+        // Using matches() - must match entire string
+        if (Pattern.matches("\\d+", "123")) {
+            System.out.println("'123' is all digits");
+        }
+    }
+}
 ```
 
 ---
@@ -367,7 +505,10 @@ print(matches)  # ['0', '0', '50'] (digits not preceded by $)
 
 ### 1. Email Validation
 
+#### Python
 ```python
+import re
+
 def validate_email(email):
     """
     Validate email address
@@ -381,22 +522,100 @@ print(validate_email("invalid@"))              # False
 print(validate_email("@invalid.com"))          # False
 ```
 
+#### C
+```c
+#include <stdio.h>
+#include <regex.h>
+
+int validate_email(const char *email) {
+    regex_t regex;
+    int result;
+    
+    // Email pattern
+    const char *pattern = "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$";
+    
+    // Compile regex
+    if (regcomp(&regex, pattern, REG_EXTENDED | REG_NOSUB) != 0) {
+        return -1;  // Error
+    }
+    
+    // Execute regex
+    result = regexec(&regex, email, 0, NULL, 0);
+    
+    // Free regex
+    regfree(&regex);
+    
+    return (result == 0) ? 1 : 0;  // 1 = valid, 0 = invalid
+}
+
+int main() {
+    printf("user@example.com: %d\n", validate_email("user@example.com"));      // 1
+    printf("invalid@: %d\n", validate_email("invalid@"));                        // 0
+    
+    return 0;
+}
+```
+
+#### C++
+```cpp
+#include <iostream>
+#include <regex>
+#include <string>
+using namespace std;
+
+bool validate_email(const string& email) {
+    regex pattern(R"(^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$)");
+    return regex_match(email, pattern);
+}
+
+int main() {
+    cout << "user@example.com: " << validate_email("user@example.com") << endl;      // 1
+    cout << "user.name@test.co.uk: " << validate_email("user.name@test.co.uk") << endl;  // 1
+    cout << "invalid@: " << validate_email("invalid@") << endl;                       // 0
+    cout << "@invalid.com: " << validate_email("@invalid.com") << endl;               // 0
+    
+    return 0;
+}
+```
+
+#### Java
+```java
+import java.util.regex.*;
+
+public class EmailValidation {
+    public static boolean validateEmail(String email) {
+        String pattern = "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$";
+        return Pattern.matches(pattern, email);
+    }
+    
+    public static void main(String[] args) {
+        System.out.println("user@example.com: " + validateEmail("user@example.com"));      // true
+        System.out.println("user.name@test.co.uk: " + validateEmail("user.name@test.co.uk"));  // true
+        System.out.println("invalid@: " + validateEmail("invalid@"));                        // false
+        System.out.println("@invalid.com: " + validateEmail("@invalid.com"));                // false
+    }
+}
+```
+
 #### Pattern Breakdown
 ```
-^                   # Start
+^                   # Start of string
 [a-zA-Z0-9._%+-]+  # Username: letters, digits, special chars
-@                   # @ symbol
+@                   # @ symbol (required)
 [a-zA-Z0-9.-]+     # Domain name
-\.                  # Dot (escaped)
-[a-zA-Z]{2,}       # TLD: 2+ letters
-$                   # End
+\.                  # Dot (literal, escaped)
+[a-zA-Z]{2,}       # TLD: 2+ letters (com, org, uk, etc.)
+$                   # End of string
 ```
 
 ---
 
-### 2. Phone Number
+### 2. Phone Number Validation
 
+#### Python
 ```python
+import re
+
 def validate_phone(phone):
     """
     Validate phone number
@@ -411,15 +630,88 @@ print(validate_phone("1234567890"))      # True
 print(validate_phone("123-45-6789"))     # False
 ```
 
+#### C
+```c
+#include <stdio.h>
+#include <regex.h>
+
+int validate_phone(const char *phone) {
+    regex_t regex;
+    int result;
+    
+    // Phone pattern
+    const char *pattern = "^\\(?[0-9]{3}\\)?[-. ]?[0-9]{3}[-. ]?[0-9]{4}$";
+    
+    if (regcomp(&regex, pattern, REG_EXTENDED | REG_NOSUB) != 0) {
+        return -1;
+    }
+    
+    result = regexec(&regex, phone, 0, NULL, 0);
+    regfree(&regex);
+    
+    return (result == 0) ? 1 : 0;
+}
+
+int main() {
+    printf("(123) 456-7890: %d\n", validate_phone("(123) 456-7890"));  // 1
+    printf("123-456-7890: %d\n", validate_phone("123-456-7890"));      // 1
+    printf("1234567890: %d\n", validate_phone("1234567890"));          // 1
+    
+    return 0;
+}
+```
+
+#### C++
+```cpp
+#include <iostream>
+#include <regex>
+#include <string>
+using namespace std;
+
+bool validate_phone(const string& phone) {
+    regex pattern(R"(^\(?\d{3}\)?[-.\s]?\d{3}[-.\s]?\d{4}$)");
+    return regex_match(phone, pattern);
+}
+
+int main() {
+    cout << "(123) 456-7890: " << validate_phone("(123) 456-7890") << endl;  // 1
+    cout << "123-456-7890: " << validate_phone("123-456-7890") << endl;      // 1
+    cout << "1234567890: " << validate_phone("1234567890") << endl;          // 1
+    cout << "123-45-6789: " << validate_phone("123-45-6789") << endl;        // 0
+    
+    return 0;
+}
+```
+
+#### Java
+```java
+import java.util.regex.*;
+
+public class PhoneValidation {
+    public static boolean validatePhone(String phone) {
+        String pattern = "^\\(?\\d{3}\\)?[-\.\\s]?\\d{3}[-\.\\s]?\\d{4}$";
+        return Pattern.matches(pattern, phone);
+    }
+    
+    public static void main(String[] args) {
+        System.out.println("(123) 456-7890: " + validatePhone("(123) 456-7890"));  // true
+        System.out.println("123-456-7890: " + validatePhone("123-456-7890"));      // true
+        System.out.println("1234567890: " + validatePhone("1234567890"));          // true
+        System.out.println("123-45-6789: " + validatePhone("123-45-6789"));        // false
+    }
+}
+```
+
 ---
 
 ### 3. URL Validation
 
+#### Python
 ```python
+import re
+
 def validate_url(url):
-    """
-    Validate URL
-    """
+    """Validate URL"""
     pattern = r'^https?://(?:www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b(?:[-a-zA-Z0-9()@:%_\+.~#?&/=]*)$'
     return re.match(pattern, url) is not None
 
@@ -428,11 +720,52 @@ print(validate_url("http://www.example.com/path")) # True
 print(validate_url("example.com"))                 # False
 ```
 
+#### C++
+```cpp
+#include <iostream>
+#include <regex>
+using namespace std;
+
+bool validate_url(const string& url) {
+    regex pattern(R"(^https?://(?:www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b(?:[-a-zA-Z0-9()@:%_\+.~#?&/=]*)$)");
+    return regex_match(url, pattern);
+}
+
+int main() {
+    cout << "https://example.com: " << validate_url("https://example.com") << endl;  // 1
+    cout << "http://www.example.com/path: " << validate_url("http://www.example.com/path") << endl;  // 1
+    cout << "example.com: " << validate_url("example.com") << endl;  // 0
+    
+    return 0;
+}
+```
+
+#### Java
+```java
+import java.util.regex.*;
+
+public class URLValidation {
+    public static boolean validateURL(String url) {
+        String pattern = "^https?://(?:www\\.)?[-a-zA-Z0-9@:%._\\+~#=]{1,256}\\.[a-zA-Z0-9()]{1,6}\\b(?:[-a-zA-Z0-9()@:%_\\+.~#?&/=]*)$";
+        return Pattern.matches(pattern, url);
+    }
+    
+    public static void main(String[] args) {
+        System.out.println("https://example.com: " + validateURL("https://example.com"));  // true
+        System.out.println("http://www.example.com/path: " + validateURL("http://www.example.com/path"));  // true
+        System.out.println("example.com: " + validateURL("example.com"));  // false
+    }
+}
+```
+
 ---
 
-### 4. Password Strength
+### 4. Password Strength Check
 
+#### Python
 ```python
+import re
+
 def check_password_strength(password):
     """
     Password must have:
@@ -462,11 +795,73 @@ print(check_password_strength("Weak123"))         # False (no special char)
 print(check_password_strength("Strong123!"))      # True
 ```
 
+#### C++
+```cpp
+#include <iostream>
+#include <regex>
+using namespace std;
+
+bool check_password_strength(const string& password) {
+    if (password.length() < 8) return false;
+    
+    regex upper(R"([A-Z])");
+    regex lower(R"([a-z])");
+    regex digit(R"(\d)");
+    regex special(R"([!@#$%^&*(),.?":{}|<>])");
+    
+    return regex_search(password, upper) &&
+           regex_search(password, lower) &&
+           regex_search(password, digit) &&
+           regex_search(password, special);
+}
+
+int main() {
+    cout << "Weak123: " << check_password_strength("Weak123") << endl;         // 0
+    cout << "Strong123!: " << check_password_strength("Strong123!") << endl;   // 1
+    
+    return 0;
+}
+```
+
+#### Java
+```java
+import java.util.regex.*;
+
+public class PasswordStrength {
+    public static boolean checkPasswordStrength(String password) {
+        if (password.length() < 8) return false;
+        
+        String[] patterns = {
+            "[A-Z]",                          // Uppercase
+            "[a-z]",                          // Lowercase
+            "\\d",                            // Digit
+            "[!@#$%^&*(),.?\":{}|<>]"        // Special char
+        };
+        
+        for (String pattern : patterns) {
+            if (!Pattern.compile(pattern).matcher(password).find()) {
+                return false;
+            }
+        }
+        
+        return true;
+    }
+    
+    public static void main(String[] args) {
+        System.out.println("Weak123: " + checkPasswordStrength("Weak123"));         // false
+        System.out.println("Strong123!: " + checkPasswordStrength("Strong123!"));   // true
+    }
+}
+```
+
 ---
 
 ### 5. Extract Data
 
+#### Python
 ```python
+import re
+
 # Extract phone numbers
 def extract_phone_numbers(text):
     pattern = r'\(?\d{3}\)?[-.\s]?\d{3}[-.\s]?\d{4}'
@@ -484,29 +879,201 @@ def extract_emails(text):
 text = "Contact: alice@example.com, bob@test.org"
 print(extract_emails(text))
 # ['alice@example.com', 'bob@test.org']
+```
 
-# Extract hashtags
-def extract_hashtags(text):
-    pattern = r'#\w+'
-    return re.findall(pattern, text)
+#### C++
+```cpp
+#include <iostream>
+#include <regex>
+#include <string>
+#include <vector>
+using namespace std;
 
-text = "Check out #python and #regex #programming"
-print(extract_hashtags(text))
-# ['#python', '#regex', '#programming']
+vector<string> extract_phone_numbers(const string& text) {
+    vector<string> results;
+    regex pattern(R"(\(?\d{3}\)?[-.\s]?\d{3}[-.\s]?\d{4})");
+    
+    auto begin = sregex_iterator(text.begin(), text.end(), pattern);
+    auto end = sregex_iterator();
+    
+    for (auto it = begin; it != end; ++it) {
+        results.push_back(it->str());
+    }
+    
+    return results;
+}
 
-# Extract URLs
-def extract_urls(text):
-    pattern = r'https?://(?:[-\w.])+(?:/[\w/_.-]*)?'
-    return re.findall(pattern, text)
+int main() {
+    string text = "Call me at (123) 456-7890 or 987-654-3210";
+    vector<string> phones = extract_phone_numbers(text);
+    
+    cout << "Phone numbers: ";
+    for (const auto& phone : phones) {
+        cout << phone << " ";
+    }
+    cout << endl;
+    // Phone numbers: (123) 456-7890 987-654-3210
+    
+    return 0;
+}
+```
 
-text = "Visit https://example.com and http://test.org/path"
-print(extract_urls(text))
-# ['https://example.com', 'http://test.org/path']
+#### Java
+```java
+import java.util.regex.*;
+import java.util.ArrayList;
+import java.util.List;
+
+public class DataExtraction {
+    public static List<String> extractPhoneNumbers(String text) {
+        List<String> results = new ArrayList<>();
+        String pattern = "\\(?\\d{3}\\)?[-\\.\\s]?\\d{3}[-\\.\\s]?\\d{4}";
+        
+        Pattern p = Pattern.compile(pattern);
+        Matcher m = p.matcher(text);
+        
+        while (m.find()) {
+            results.add(m.group());
+        }
+        
+        return results;
+    }
+    
+    public static List<String> extractEmails(String text) {
+        List<String> results = new ArrayList<>();
+        String pattern = "[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}";
+        
+        Pattern p = Pattern.compile(pattern);
+        Matcher m = p.matcher(text);
+        
+        while (m.find()) {
+            results.add(m.group());
+        }
+        
+        return results;
+    }
+    
+    public static void main(String[] args) {
+        String text1 = "Call me at (123) 456-7890 or 987-654-3210";
+        System.out.println("Phone numbers: " + extractPhoneNumbers(text1));
+        // Phone numbers: [(123) 456-7890, 987-654-3210]
+        
+        String text2 = "Contact: alice@example.com, bob@test.org";
+        System.out.println("Emails: " + extractEmails(text2));
+        // Emails: [alice@example.com, bob@test.org]
+    }
+}
 ```
 
 ---
 
-### 6. Date Formats
+## String Replacement with Regex
+
+### Replace Matches
+
+#### Python
+```python
+import re
+
+# Replace all matches
+pattern = r'\d+'
+text = "Price: $100, Quantity: 5"
+result = re.sub(pattern, 'X', text)
+print(result)  # 'Price: $X, Quantity: X'
+
+# Replace with limit
+result = re.sub(pattern, 'X', text, count=1)
+print(result)  # 'Price: $X, Quantity: 5'
+
+# Replace with function
+def double(match):
+    return str(int(match.group()) * 2)
+
+result = re.sub(r'\d+', double, "10 20 30")
+print(result)  # '20 40 60'
+
+# Backreferences in replacement
+pattern = r'(\w+) (\w+)'
+text = "John Doe"
+result = re.sub(pattern, r'\2, \1', text)
+print(result)  # 'Doe, John'
+```
+
+#### C++ 
+```cpp
+#include <iostream>
+#include <regex>
+#include <string>
+using namespace std;
+
+int main() {
+    string text = "Price: $100, Quantity: 5";
+    regex pattern(R"(\d+)");
+    
+    // Replace all matches
+    string result = regex_replace(text, pattern, "X");
+    cout << "Replace all: " << result << endl;
+    // Replace all: Price: $X, Quantity: X
+    
+    // Replace first match only
+    result = regex_replace(text, pattern, "X", 
+                          regex_constants::format_first_only);
+    cout << "Replace first: " << result << endl;
+    // Replace first: Price: $X, Quantity: 5
+    
+    // Backreferences
+    string name = "John Doe";
+    regex name_pattern(R"((\w+) (\w+))");
+    result = regex_replace(name, name_pattern, "$2, $1");
+    cout << "Swapped: " << result << endl;
+    // Swapped: Doe, John
+    
+    return 0;
+}
+```
+
+#### Java
+```java
+import java.util.regex.*;
+
+public class RegexReplace {
+    public static void main(String[] args) {
+        String text = "Price: $100, Quantity: 5";
+        String pattern = "\\d+";
+        
+        // Replace all matches
+        String result = text.replaceAll(pattern, "X");
+        System.out.println("Replace all: " + result);
+        // Replace all: Price: $X, Quantity: X
+        
+        // Replace first match
+        result = text.replaceFirst(pattern, "X");
+        System.out.println("Replace first: " + result);
+        // Replace first: Price: $X, Quantity: 5
+        
+        // Replace with function (Java 9+)
+        Pattern p = Pattern.compile(pattern);
+        Matcher m = p.matcher("10 20 30");
+        StringBuffer sb = new StringBuffer();
+        
+        while (m.find()) {
+            int doubled = Integer.parseInt(m.group()) * 2;
+            m.appendReplacement(sb, String.valueOf(doubled));
+        }
+        m.appendTail(sb);
+        System.out.println("Doubled: " + sb.toString());
+        // Doubled: 20 40 60
+        
+        // Backreferences
+        String name = "John Doe";
+        result = name.replaceAll("(\\w+) (\\w+)", "$2, $1");
+        System.out.println("Swapped: " + result);
+        // Swapped: Doe, John
+    }
+}
+```
+
+---
 
 ```python
 def extract_dates(text):
@@ -690,57 +1257,177 @@ print(re.match(pattern, "1234"))   # Match
 
 ---
 
+---
+
+## Language-Specific Quick Reference
+
+### Python (re module)
+```python
+import re
+
+# Main functions
+re.match(pattern, string)      # Match at start
+re.search(pattern, string)     # Find first match
+re.findall(pattern, string)    # Find all matches
+re.finditer(pattern, string)   # Iterator of matches
+re.sub(pattern, repl, string)  # Replace matches
+re.split(pattern, string)      # Split by pattern
+
+# Compile for reuse
+pattern = re.compile(r'\d+')
+pattern.findall(text)
+
+# Flags
+re.IGNORECASE or re.I         # Case-insensitive
+re.MULTILINE or re.M          # ^ and $ match line boundaries
+re.DOTALL or re.S             # . matches newline
+re.VERBOSE or re.X            # Allow comments
+```
+
+### C (POSIX regex.h)
+```c
+#include <regex.h>
+
+regex_t regex;
+regmatch_t matches[10];
+
+// Compile pattern
+regcomp(&regex, pattern, REG_EXTENDED);
+
+// Execute (0 = match, REG_NOMATCH = no match)
+int result = regexec(&regex, text, nmatch, matches, 0);
+
+// Free
+regfree(&regex);
+
+// Flags
+REG_EXTENDED      # Extended Regular Expressions
+REG_ICASE         # Case-insensitive
+REG_NOSUB         # Don't store match positions
+REG_NEWLINE       # ^ and $ match line boundaries
+```
+
+### C++ (<regex>)
+```cpp
+#include <regex>
+using namespace std;
+
+regex pattern(R"(\d+)");
+smatch match;
+
+// Main functions
+regex_match(text, match, pattern)      // Match entire string
+regex_search(text, match, pattern)     // Find first match
+regex_replace(text, pattern, repl)     // Replace matches
+
+// Iterate all matches
+sregex_iterator begin(text.begin(), text.end(), pattern);
+sregex_iterator end;
+for (auto it = begin; it != end; ++it) {
+    cout << it->str();
+}
+
+// Flags (regex_constants::)
+icase         // Case-insensitive
+ECMAScript    // ECMAScript grammar (default)
+extended      // POSIX extended grammar
+```
+
+### Java (java.util.regex)
+```java
+import java.util.regex.*;
+
+Pattern pattern = Pattern.compile("\\d+");
+Matcher matcher = pattern.matcher(text);
+
+// Main methods
+matcher.matches()     // Match entire string
+matcher.find()        // Find next match
+matcher.group()       // Get matched text
+matcher.start()       // Start position
+matcher.end()         // End position
+
+// String methods
+text.matches(pattern)           // Match entire string
+text.replaceAll(pattern, repl)  // Replace all
+text.replaceFirst(pattern, repl)// Replace first
+text.split(pattern)             // Split by pattern
+
+// Flags
+Pattern.CASE_INSENSITIVE  // Case-insensitive
+Pattern.MULTILINE         // ^ and $ match line boundaries
+Pattern.DOTALL           // . matches newline
+Pattern.COMMENTS         // Allow whitespace and comments
+```
+
+---
+
+## Common Regex Patterns Reference
+
+| Pattern | Description | Example |
+|---------|-------------|---------|
+| `.` | Any character | `a.c` matches abc, aXc |
+| `^` | Start of string | `^Hello` matches "Hello..." |
+| `$` | End of string | `World$` matches "...World" |
+| `*` | 0 or more | `ab*` matches a, ab, abb |
+| `+` | 1 or more | `ab+` matches ab, abb |
+| `?` | 0 or 1 | `colou?r` matches color, colour |
+| `{n}` | Exactly n | `\d{3}` matches 123 |
+| `{n,m}` | Between n and m | `\d{2,4}` matches 12, 123, 1234 |
+| `[abc]` | Character class | Matches a, b, or c |
+| `[^abc]` | Negated class | Not a, b, or c |
+| `\d` | Digit | `[0-9]` |
+| `\w` | Word character | `[a-zA-Z0-9_]` |
+| `\s` | Whitespace | Space, tab, newline |
+| `\b` | Word boundary | Boundary between \w and \W |
+| `\|` | OR | `cat\|dog` matches cat or dog |
+| `()` | Capturing group | Group and capture |
+| `(?:)` | Non-capturing group | Group without capturing |
+
+---
+
 ## Time Complexity
 
-| Operation | Average | Worst |
-|-----------|---------|-------|
-| Match | O(n) | O(2^n) |
-| Search | O(n) | O(2^n) |
-| Findall | O(n*m) | O(2^n*m) |
-| Sub | O(n*m) | O(2^n*m) |
+| Operation | Python | C | C++ | Java |
+|-----------|--------|---|-----|------|
+| **Compile** | O(m) | O(m) | O(m) | O(m) |
+| **Match** | O(n) avg | O(n) avg | O(n) avg | O(n) avg |
+| **Search** | O(n×m) worst | O(n×m) worst | O(n×m) worst | O(n×m) worst |
+| **Replace** | O(n×m) | - | O(n×m) | O(n×m) |
 
-Note: Worst case with catastrophic backtracking
+*Where n = text length, m = pattern length*
 
 ---
 
 ## Exam Tips
 
-### 1. MCQ Questions
-**Q**: \d+ matches?
-**A**: One or more digits
-
-**Q**: ^ in regex means?
-**A**: Start of string (or line with MULTILINE)
-
-**Q**: * vs +?
-**A**: * is 0 or more, + is 1 or more
-
-**Q**: Greedy vs non-greedy?
-**A**: Greedy matches max, non-greedy (.*?) matches min
-
-### 2. Quick Reference
-```
-.     Any character
-\d    Digit
-\w    Word character
-\s    Whitespace
-^     Start
-$     End
-*     0 or more
-+     1 or more
-?     0 or 1
-{n}   Exactly n
-()    Group
-[]    Character class
-|     Or
-```
-
 ### Key Points
-1. **Metacharacters**: Special meaning characters
-2. **Character Classes**: [abc], [a-z], \d, \w, \s
-3. **Quantifiers**: *, +, ?, {n}, {n,m}
-4. **Anchors**: ^, $, \b
-5. **Groups**: (), (?:), (?P<name>)
-6. **Lookahead/Lookbehind**: (?=), (?!), (?<=), (?<!)
-7. **Flags**: re.I, re.M, re.S, re.X
-8. **Performance**: Compile patterns for reuse
+1. **Always compile patterns** for reuse (performance)
+2. **Escape special characters**: `. * + ? ^ $ ( ) [ ] { } \ |`
+3. **Use raw strings** in Python: `r'\d+'` not `'\\d+'`
+4. **Double escape in Java**: `"\\d+"` not `"\d+"`
+5. **Use character classes**: `\d`, `\w`, `\s` for clarity
+6. **Non-greedy matching**: `.*?` instead of `.*`
+7. **Anchors**: `^` and `$` for full string match
+8. **Word boundaries**: `\b` for whole word matching
+
+### Common Mistakes
+```
+❌ Wrong: pattern = "*.txt"        → Invalid (nothing to repeat)
+✅ Right: pattern = ".*\.txt"      → Matches any .txt file
+
+❌ Wrong: pattern = "\d+"          → Python interprets \d as escape
+✅ Right: pattern = r"\d+"         → Raw string, regex sees \d
+
+❌ Wrong: pattern = "^test"        → Only matches at string start
+✅ Right: pattern = "test"         → Matches anywhere
+
+❌ Wrong: email = ".+@.+\..+"      → Too greedy, allows invalid
+✅ Right: email = "[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}"
+```
+
+---
+
+## END OF REGULAR EXPRESSIONS GUIDE
+
+**Master regex patterns for powerful text processing across all languages! 🚀**

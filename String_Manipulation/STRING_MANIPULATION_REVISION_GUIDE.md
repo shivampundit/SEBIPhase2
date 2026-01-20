@@ -1,27 +1,56 @@
 # String Manipulation - Complete Revision Guide
 
-## Quick Reference: All Operations, Patterns & Regex
+## Quick Reference: All Operations, Patterns & Regex (Python, C, C++, Java)
+
+---
+
+## LANGUAGE COMPARISON
+
+### String Properties by Language
+
+| Property | Python | C | C++ | Java |
+|----------|--------|---|-----|------|
+| **Mutability** | Immutable | Mutable (char[]) | Mutable (char[]), Immutable (string) | Immutable |
+| **Indexing** | 0-based, negative | 0-based | 0-based | 0-based |
+| **Null-terminated** | No | Yes (`\0`) | Yes (C-style) | No |
+| **Built-in Type** | Yes (`str`) | No (char array) | Yes (`std::string`) | Yes (`String`) |
+| **Length** | `len(s)` O(1) | `strlen(s)` O(n) | `s.length()` O(1) | `s.length()` O(1) |
+
+### Quick Syntax Reference
+
+| Operation | Python | C | C++ | Java |
+|-----------|--------|---|-----|------|
+| **Create** | `s = "Hello"` | `char s[] = "Hello";` | `string s = "Hello";` | `String s = "Hello";` |
+| **Length** | `len(s)` | `strlen(s)` | `s.length()` | `s.length()` |
+| **Access** | `s[0]` | `s[0]` | `s[0]` | `s.charAt(0)` |
+| **Substring** | `s[0:5]` | `strncpy()` | `s.substr(0,5)` | `s.substring(0,5)` |
+| **Concat** | `s1 + s2` | `strcat()` | `s1 + s2` | `s1 + s2` |
+| **Compare** | `s1 == s2` | `strcmp()` | `s1 == s2` | `s1.equals(s2)` |
+| **Find** | `s.find("x")` | `strstr()` | `s.find("x")` | `s.indexOf("x")` |
+| **Upper** | `s.upper()` | `toupper()` | `transform()` | `s.toUpperCase()` |
+| **Split** | `s.split()` | `strtok()` | custom | `s.split()` |
+| **Replace** | `s.replace()` | custom | `regex_replace()` | `s.replaceAll()` |
 
 ---
 
 ## STRING FUNDAMENTALS
 
-### Key Properties
+### Key Properties (Python-focused)
 
 | Property | Description |
 |----------|-------------|
-| **Immutable** | Cannot change after creation |
+| **Immutable** | Cannot change after creation (Python, Java) |
 | **Indexed** | Access by position (0-based) |
 | **Iterable** | Can loop through characters |
 | **Sequential** | Maintains order |
-| **Hashable** | Can be dict key |
+| **Hashable** | Can be dict key (Python) |
 
 ### Time Complexities
 
 | Operation | Time | Notes |
 |-----------|------|-------|
 | **Access** | O(1) | Direct indexing |
-| **Length** | O(1) | Stored property |
+| **Length** | O(1) | Stored property (except C) |
 | **Concatenation** | O(n+m) | Creates new string |
 | **Slicing** | O(k) | k = slice length |
 | **Search** | O(n×m) | Naive, O(n+m) KMP |
@@ -823,6 +852,265 @@ Need case-insensitive?
 
 ---
 
+## 11. MULTI-LANGUAGE STRING OPERATIONS
+
+### Common String Problems Across Languages
+
+#### Reverse String
+
+**Python:**
+```python
+s[::-1]  # Slicing
+```
+
+**C:**
+```c
+// Two pointers, in-place
+void reverse(char *s) {
+    int l = 0, r = strlen(s) - 1;
+    while (l < r) {
+        char temp = s[l]; s[l] = s[r]; s[r] = temp;
+        l++; r--;
+    }
+}
+```
+
+**C++:**
+```cpp
+reverse(s.begin(), s.end());  // STL
+```
+
+**Java:**
+```java
+new StringBuilder(s).reverse().toString();
+```
+
+---
+
+#### Palindrome Check
+
+**Python:**
+```python
+s == s[::-1]  # Simple
+# Or two pointers for O(1) space
+```
+
+**C:**
+```c
+int is_palindrome(char *s) {
+    int l = 0, r = strlen(s) - 1;
+    while (l < r) {
+        if (s[l++] != s[r--]) return 0;
+    }
+    return 1;
+}
+```
+
+**C++:**
+```cpp
+bool is_palindrome(string s) {
+    int l = 0, r = s.length() - 1;
+    while (l < r) {
+        if (s[l++] != s[r--]) return false;
+    }
+    return true;
+}
+```
+
+**Java:**
+```java
+boolean isPalindrome(String s) {
+    int l = 0, r = s.length() - 1;
+    while (l < r) {
+        if (s.charAt(l++) != s.charAt(r--)) return false;
+    }
+    return true;
+}
+```
+
+---
+
+#### Anagram Check
+
+**Python:**
+```python
+from collections import Counter
+Counter(s1) == Counter(s2)  # O(n) time
+sorted(s1) == sorted(s2)    # O(n log n) time
+```
+
+**C:**
+```c
+int is_anagram(char *s1, char *s2) {
+    int count[256] = {0};
+    for (int i = 0; s1[i]; i++) count[s1[i]]++;
+    for (int i = 0; s2[i]; i++) count[s2[i]]--;
+    for (int i = 0; i < 256; i++) {
+        if (count[i] != 0) return 0;
+    }
+    return 1;
+}
+```
+
+**C++:**
+```cpp
+bool is_anagram(string s1, string s2) {
+    sort(s1.begin(), s1.end());
+    sort(s2.begin(), s2.end());
+    return s1 == s2;
+}
+```
+
+**Java:**
+```java
+boolean isAnagram(String s1, String s2) {
+    char[] a1 = s1.toCharArray();
+    char[] a2 = s2.toCharArray();
+    Arrays.sort(a1);
+    Arrays.sort(a2);
+    return Arrays.equals(a1, a2);
+}
+```
+
+---
+
+### Regular Expressions Across Languages
+
+#### Email Validation Pattern
+```
+^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$
+```
+
+**Python:**
+```python
+import re
+re.match(r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$', email)
+```
+
+**C (POSIX):**
+```c
+#include <regex.h>
+regex_t regex;
+regcomp(&regex, "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$", REG_EXTENDED);
+regexec(&regex, email, 0, NULL, 0);
+regfree(&regex);
+```
+
+**C++:**
+```cpp
+#include <regex>
+regex pattern(R"(^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$)");
+regex_match(email, pattern);
+```
+
+**Java:**
+```java
+import java.util.regex.*;
+Pattern.matches("^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$", email);
+```
+
+---
+
+### String Libraries Reference
+
+#### Python
+```python
+# Built-in str methods
+s.upper(), s.lower(), s.strip()
+s.split(), s.join(), s.replace()
+s.startswith(), s.endswith()
+s.find(), s.index(), s.count()
+
+# re module for regex
+import re
+re.match(), re.search(), re.findall()
+re.sub(), re.split()
+```
+
+#### C
+```c
+// <string.h>
+strlen(), strcpy(), strcat(), strcmp()
+strstr(), strchr(), strtok()
+
+// <ctype.h>
+toupper(), tolower(), isalpha(), isdigit()
+
+// <regex.h> for POSIX regex
+regcomp(), regexec(), regfree()
+```
+
+#### C++
+```cpp
+// <string>
+s.length(), s.substr(), s.find()
+s.replace(), s.compare()
+
+// <algorithm>
+reverse(), sort(), transform()
+
+// <regex>
+regex, regex_match(), regex_search()
+regex_replace(), sregex_iterator
+```
+
+#### Java
+```java
+// String class
+s.length(), s.charAt(), s.substring()
+s.indexOf(), s.lastIndexOf()
+s.replace(), s.replaceAll()
+s.split(), String.join()
+s.toUpperCase(), s.toLowerCase()
+s.trim(), s.strip() // Java 11+
+s.startsWith(), s.endsWith()
+s.contains(), s.equals()
+
+// StringBuilder for mutable strings
+StringBuilder sb = new StringBuilder();
+sb.append(), sb.reverse()
+
+// Pattern/Matcher for regex
+Pattern.compile(), matcher.find()
+matcher.group(), matcher.replaceAll()
+```
+
+---
+
+## 12. LANGUAGE-SPECIFIC GOTCHAS
+
+### Python
+- ✅ Strings are immutable - create new string for changes
+- ✅ Negative indexing: `s[-1]` for last character
+- ✅ Slicing: `s[start:end:step]`
+- ⚠️ Use `''.join(list)` for concatenation in loops (not `+=`)
+
+### C
+- ⚠️ Always null-terminate strings with `'\0'`
+- ⚠️ `strlen()` is O(n) - cache if using multiple times
+- ⚠️ Buffer overflow risk - use `strncpy()`, `strncat()`
+- ⚠️ Must manually allocate/free memory
+
+### C++
+- ✅ Use `std::string`, not C-style char arrays
+- ✅ `s.length()` and `s.size()` are equivalent
+- ⚠️ Use `.c_str()` when C functions needed
+- ⚠️ Include `<string>` for string, `<cstring>` for C functions
+
+### Java
+- ⚠️ Use `.equals()` for comparison, NOT `==`
+- ⚠️ `==` compares references, not content
+- ✅ Strings are immutable - use `StringBuilder` for mutations
+- ✅ Use `+` for simple concat, `StringBuilder` for loops
+- ⚠️ Regex patterns need double backslash: `"\\d+"` not `"\d+"`
+
+---
+
 ## END OF STRING MANIPULATION REVISION GUIDE
 
-**Master strings, regex, and pattern matching - fundamental for any coding interview! 🚀**
+**Master strings across Python, C, C++, and Java for comprehensive programming skills! 🚀**
+
+### Additional Resources
+- For detailed examples: See `01_String_Operations/String_Operations.md`
+- For regex patterns: See `02_Regex/Regular_Expressions.md`
+- For practice: See `STRING_MANIPULATION_MCQ.md`
