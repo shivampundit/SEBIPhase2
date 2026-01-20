@@ -41,6 +41,90 @@ Last node points back to first node.
 ## Singly Linked List Implementation
 
 ### Node Structure
+
+#### C
+```c
+#include <stdio.h>
+#include <stdlib.h>
+
+// Node structure
+typedef struct Node {
+    int data;
+    struct Node* next;
+} Node;
+
+// Create a new node
+Node* createNode(int data) {
+    Node* newNode = (Node*)malloc(sizeof(Node));
+    newNode->data = data;
+    newNode->next = NULL;
+    return newNode;
+}
+
+// Linked List structure
+typedef struct {
+    Node* head;
+} LinkedList;
+
+// Initialize linked list
+LinkedList* createLinkedList() {
+    LinkedList* list = (LinkedList*)malloc(sizeof(LinkedList));
+    list->head = NULL;
+    return list;
+}
+```
+
+#### C++
+```cpp
+#include <iostream>
+using namespace std;
+
+// Node structure
+struct Node {
+    int data;
+    Node* next;
+    
+    Node(int val) : data(val), next(nullptr) {}
+};
+
+// Linked List class
+class LinkedList {
+private:
+    Node* head;
+    
+public:
+    LinkedList() : head(nullptr) {}
+    
+    // Methods will be defined below
+};
+```
+
+#### Java
+```java
+// Node class
+class Node {
+    int data;
+    Node next;
+    
+    Node(int data) {
+        this.data = data;
+        this.next = null;
+    }
+}
+
+// Linked List class
+class LinkedList {
+    private Node head;
+    
+    public LinkedList() {
+        this.head = null;
+    }
+    
+    // Methods will be defined below
+}
+```
+
+#### Python
 ```python
 class Node:
     def __init__(self, data):
@@ -55,6 +139,71 @@ class LinkedList:
 ### Basic Operations
 
 #### 1. Insert at Beginning
+
+##### C
+```c
+void insert_at_beginning(LinkedList* list, int data) {
+    /*
+     * Insert node at beginning
+     * Time: O(1)
+     * Space: O(1)
+     */
+    Node* newNode = createNode(data);
+    newNode->next = list->head;
+    list->head = newNode;
+}
+
+// Usage
+LinkedList* ll = createLinkedList();
+insert_at_beginning(ll, 3);
+insert_at_beginning(ll, 2);
+insert_at_beginning(ll, 1);
+// List: 1 → 2 → 3 → NULL
+```
+
+##### C++
+```cpp
+void insertAtBeginning(int data) {
+    /*
+     * Insert node at beginning
+     * Time: O(1)
+     * Space: O(1)
+     */
+    Node* newNode = new Node(data);
+    newNode->next = head;
+    head = newNode;
+}
+
+// Usage
+LinkedList ll;
+ll.insertAtBeginning(3);
+ll.insertAtBeginning(2);
+ll.insertAtBeginning(1);
+// List: 1 → 2 → 3 → NULL
+```
+
+##### Java
+```java
+public void insertAtBeginning(int data) {
+    /*
+     * Insert node at beginning
+     * Time: O(1)
+     * Space: O(1)
+     */
+    Node newNode = new Node(data);
+    newNode.next = head;
+    head = newNode;
+}
+
+// Usage
+LinkedList ll = new LinkedList();
+ll.insertAtBeginning(3);
+ll.insertAtBeginning(2);
+ll.insertAtBeginning(1);
+// List: 1 → 2 → 3 → NULL
+```
+
+##### Python
 ```python
 def insert_at_beginning(self, data):
     """
@@ -252,6 +401,98 @@ def length(self):
 ## Common Linked List Problems
 
 ### 1. Reverse Linked List
+
+#### C
+```c
+void reverse(LinkedList* list) {
+    /*
+     * Reverse linked list
+     * Time: O(n)
+     * Space: O(1)
+     */
+    Node* prev = NULL;
+    Node* current = list->head;
+    Node* next = NULL;
+    
+    while (current != NULL) {
+        next = current->next;
+        current->next = prev;
+        prev = current;
+        current = next;
+    }
+    
+    list->head = prev;
+}
+
+// Dry Run:
+// Initial: 1 → 2 → 3 → NULL
+// Step 1: NULL ← 1   2 → 3 → NULL
+// Step 2: NULL ← 1 ← 2   3 → NULL
+// Step 3: NULL ← 1 ← 2 ← 3
+// Result: 3 → 2 → 1 → NULL
+```
+
+#### C++
+```cpp
+void reverse() {
+    /*
+     * Reverse linked list
+     * Time: O(n)
+     * Space: O(1)
+     */
+    Node* prev = nullptr;
+    Node* current = head;
+    Node* next = nullptr;
+    
+    while (current != nullptr) {
+        next = current->next;
+        current->next = prev;
+        prev = current;
+        current = next;
+    }
+    
+    head = prev;
+}
+
+// Dry Run:
+// Initial: 1 → 2 → 3 → NULL
+// Step 1: NULL ← 1   2 → 3 → NULL
+// Step 2: NULL ← 1 ← 2   3 → NULL
+// Step 3: NULL ← 1 ← 2 ← 3
+// Result: 3 → 2 → 1 → NULL
+```
+
+#### Java
+```java
+public void reverse() {
+    /*
+     * Reverse linked list
+     * Time: O(n)
+     * Space: O(1)
+     */
+    Node prev = null;
+    Node current = head;
+    Node next = null;
+    
+    while (current != null) {
+        next = current.next;
+        current.next = prev;
+        prev = current;
+        current = next;
+    }
+    
+    head = prev;
+}
+
+// Dry Run:
+// Initial: 1 → 2 → 3 → NULL
+// Step 1: NULL ← 1   2 → 3 → NULL
+// Step 2: NULL ← 1 ← 2   3 → NULL
+// Step 3: NULL ← 1 ← 2 ← 3
+// Result: 3 → 2 → 1 → NULL
+```
+
+#### Python
 ```python
 def reverse(self):
     """
@@ -279,6 +520,92 @@ def reverse(self):
 ```
 
 ### 2. Detect Cycle (Floyd's Algorithm)
+
+#### C
+```c
+int has_cycle(LinkedList* list) {
+    /*
+     * Detect cycle using Floyd's algorithm
+     * Time: O(n)
+     * Space: O(1)
+     */
+    if (list->head == NULL) {
+        return 0;
+    }
+    
+    Node* slow = list->head;
+    Node* fast = list->head;
+    
+    while (fast != NULL && fast->next != NULL) {
+        slow = slow->next;
+        fast = fast->next->next;
+        
+        if (slow == fast) {
+            return 1;  // Cycle detected
+        }
+    }
+    
+    return 0;  // No cycle
+}
+```
+
+#### C++
+```cpp
+bool hasCycle() {
+    /*
+     * Detect cycle using Floyd's algorithm
+     * Time: O(n)
+     * Space: O(1)
+     */
+    if (head == nullptr) {
+        return false;
+    }
+    
+    Node* slow = head;
+    Node* fast = head;
+    
+    while (fast != nullptr && fast->next != nullptr) {
+        slow = slow->next;
+        fast = fast->next->next;
+        
+        if (slow == fast) {
+            return true;
+        }
+    }
+    
+    return false;
+}
+```
+
+#### Java
+```java
+public boolean hasCycle() {
+    /*
+     * Detect cycle using Floyd's algorithm
+     * Time: O(n)
+     * Space: O(1)
+     */
+    if (head == null) {
+        return false;
+    }
+    
+    Node slow = head;
+    Node fast = head;
+    
+    while (fast != null && fast.next != null) {
+        slow = slow.next;
+        fast = fast.next.next;
+        
+        if (slow == fast) {
+            return true;
+        }
+    }
+    
+    return false;
+}
+```
+
+#### Python
 ```python
 def has_cycle(self):
     """
