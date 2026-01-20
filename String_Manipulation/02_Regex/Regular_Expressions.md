@@ -1328,9 +1328,9 @@ for (auto it = begin; it != end; ++it) {
 }
 
 // Flags (regex_constants::)
-icase         # Case-insensitive
-ECMAScript    # ECMAScript grammar (default)
-extended      # POSIX extended grammar
+icase         // Case-insensitive
+ECMAScript    // ECMAScript grammar (default)
+extended      // POSIX extended grammar
 ```
 
 ### Java (java.util.regex)
@@ -1341,23 +1341,23 @@ Pattern pattern = Pattern.compile("\\d+");
 Matcher matcher = pattern.matcher(text);
 
 // Main methods
-matcher.matches()     # Match entire string
-matcher.find()        # Find next match
-matcher.group()       # Get matched text
-matcher.start()       # Start position
-matcher.end()         # End position
+matcher.matches()     // Match entire string
+matcher.find()        // Find next match
+matcher.group()       // Get matched text
+matcher.start()       // Start position
+matcher.end()         // End position
 
 // String methods
-text.matches(pattern)           # Match entire string
-text.replaceAll(pattern, repl)  # Replace all
-text.replaceFirst(pattern, repl)# Replace first
-text.split(pattern)             # Split by pattern
+text.matches(pattern)           // Match entire string
+text.replaceAll(pattern, repl)  // Replace all
+text.replaceFirst(pattern, repl)// Replace first
+text.split(pattern)             // Split by pattern
 
 // Flags
-Pattern.CASE_INSENSITIVE  # Case-insensitive
-Pattern.MULTILINE         # ^ and $ match line boundaries
-Pattern.DOTALL           # . matches newline
-Pattern.COMMENTS         # Allow whitespace and comments
+Pattern.CASE_INSENSITIVE  // Case-insensitive
+Pattern.MULTILINE         // ^ and $ match line boundaries
+Pattern.DOTALL           // . matches newline
+Pattern.COMMENTS         // Allow whitespace and comments
 ```
 
 ---

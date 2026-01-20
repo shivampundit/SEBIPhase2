@@ -669,6 +669,7 @@ public class CaseConversion {
         // Normalize name
         String name = "  john doe  ";
         String normalized = Arrays.stream(name.trim().split(" "))
+            .filter(w -> w.length() > 0)  // Filter empty strings
             .map(w -> w.substring(0, 1).toUpperCase() + w.substring(1).toLowerCase())
             .collect(Collectors.joining(" "));
         System.out.println("Normalized: " + normalized);  // "John Doe"
