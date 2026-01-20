@@ -49,7 +49,257 @@ Insert and delete from both ends
 
 ## 1. Array-based Queue
 
-### Simple Queue
+### C
+```c
+#include <stdio.h>
+#include <stdlib.h>
+#include <stdbool.h>
+
+#define MAX_SIZE 100
+
+typedef struct {
+    int items[MAX_SIZE];
+    int front;
+    int rear;
+    int size;
+    int capacity;
+} Queue;
+
+// Initialize queue
+Queue* createQueue(int capacity) {
+    Queue* queue = (Queue*)malloc(sizeof(Queue));
+    queue->front = 0;
+    queue->rear = -1;
+    queue->size = 0;
+    queue->capacity = capacity;
+    return queue;
+}
+
+// Check if queue is empty
+bool isEmpty(Queue* queue) {
+    return queue->size == 0;
+}
+
+// Check if queue is full
+bool isFull(Queue* queue) {
+    return queue->size == queue->capacity;
+}
+
+// Enqueue element
+void enqueue(Queue* queue, int data) {
+    if (isFull(queue)) {
+        printf("Queue Overflow\n");
+        return;
+    }
+    queue->rear = (queue->rear + 1) % queue->capacity;
+    queue->items[queue->rear] = data;
+    queue->size++;
+}
+
+// Dequeue element
+int dequeue(Queue* queue) {
+    if (isEmpty(queue)) {
+        printf("Queue Underflow\n");
+        return -1;
+    }
+    int data = queue->items[queue->front];
+    queue->front = (queue->front + 1) % queue->capacity;
+    queue->size--;
+    return data;
+}
+
+// Peek front element
+int peek(Queue* queue) {
+    if (isEmpty(queue)) {
+        printf("Queue is empty\n");
+        return -1;
+    }
+    return queue->items[queue->front];
+}
+
+// Get size
+int getSize(Queue* queue) {
+    return queue->size;
+}
+```
+
+### C++
+```cpp
+#include <iostream>
+#include <queue>
+#include <stdexcept>
+using namespace std;
+
+class ArrayQueue {
+private:
+    int* items;
+    int front;
+    int rear;
+    int size;
+    int capacity;
+    
+public:
+    ArrayQueue(int cap = 100) : capacity(cap), front(0), rear(-1), size(0) {
+        items = new int[capacity];
+    }
+    
+    ~ArrayQueue() {
+        delete[] items;
+    }
+    
+    // Enqueue element
+    void enqueue(int data) {
+        /*
+         * Time: O(1)
+         * Space: O(1)
+         */
+        if (isFull()) {
+            throw overflow_error("Queue is full");
+        }
+        rear = (rear + 1) % capacity;
+        items[rear] = data;
+        size++;
+    }
+    
+    // Dequeue element
+    int dequeue() {
+        /*
+         * Time: O(1)
+         * Space: O(1)
+         */
+        if (isEmpty()) {
+            throw underflow_error("Queue is empty");
+        }
+        int data = items[front];
+        front = (front + 1) % capacity;
+        size--;
+        return data;
+    }
+    
+    // Peek front element
+    int peek() {
+        if (isEmpty()) {
+            throw underflow_error("Queue is empty");
+        }
+        return items[front];
+    }
+    
+    // Check if empty
+    bool isEmpty() {
+        return size == 0;
+    }
+    
+    // Check if full
+    bool isFull() {
+        return size == capacity;
+    }
+    
+    // Get size
+    int getSize() {
+        return size;
+    }
+};
+
+// Using STL queue
+void useSTLQueue() {
+    queue<int> q;
+    q.push(10);
+    q.push(20);
+    q.push(30);
+    cout << q.front() << endl;  // 10
+    q.pop();
+    cout << q.size() << endl;   // 2
+}
+```
+
+### Java
+```java
+import java.util.LinkedList;
+import java.util.Queue;
+
+class ArrayQueue {
+    private int[] items;
+    private int front;
+    private int rear;
+    private int size;
+    private int capacity;
+    
+    public ArrayQueue(int capacity) {
+        this.capacity = capacity;
+        this.items = new int[capacity];
+        this.front = 0;
+        this.rear = -1;
+        this.size = 0;
+    }
+    
+    // Enqueue element
+    public void enqueue(int data) {
+        /*
+         * Time: O(1)
+         * Space: O(1)
+         */
+        if (isFull()) {
+            throw new IllegalStateException("Queue is full");
+        }
+        rear = (rear + 1) % capacity;
+        items[rear] = data;
+        size++;
+    }
+    
+    // Dequeue element
+    public int dequeue() {
+        /*
+         * Time: O(1)
+         * Space: O(1)
+         */
+        if (isEmpty()) {
+            throw new IllegalStateException("Queue is empty");
+        }
+        int data = items[front];
+        front = (front + 1) % capacity;
+        size--;
+        return data;
+    }
+    
+    // Peek front element
+    public int peek() {
+        if (isEmpty()) {
+            throw new IllegalStateException("Queue is empty");
+        }
+        return items[front];
+    }
+    
+    // Check if empty
+    public boolean isEmpty() {
+        return size == 0;
+    }
+    
+    // Check if full
+    public boolean isFull() {
+        return size == capacity;
+    }
+    
+    // Get size
+    public int getSize() {
+        return size;
+    }
+}
+
+// Using Java's Queue interface
+public class QueueExample {
+    public static void main(String[] args) {
+        Queue<Integer> queue = new LinkedList<>();
+        queue.add(10);
+        queue.add(20);
+        queue.add(30);
+        System.out.println(queue.peek());   // 10
+        queue.remove();
+        System.out.println(queue.size());   // 2
+    }
+}
+```
+
+### Python - Simple Queue
 ```python
 class ArrayQueue:
     def __init__(self, capacity=100):

@@ -14,6 +14,88 @@ An array is a linear data structure that stores elements of the same type in con
 
 ## Array Declaration and Initialization
 
+### C
+```c
+#include <stdio.h>
+#include <stdlib.h>
+
+// Fixed size array
+int arr[5];
+
+// With initialization
+int arr[] = {1, 2, 3, 4, 5};
+int arr[5] = {1, 2, 3, 4, 5};
+
+// Dynamic array using malloc
+int* arr = (int*)malloc(5 * sizeof(int));
+
+// 2D array
+int matrix[3][3];
+int matrix[3][3] = {{1, 2, 3}, {4, 5, 6}, {7, 8, 9}};
+
+// Dynamic 2D array
+int** matrix = (int**)malloc(3 * sizeof(int*));
+for (int i = 0; i < 3; i++) {
+    matrix[i] = (int*)malloc(3 * sizeof(int));
+}
+```
+
+### C++
+```cpp
+#include <iostream>
+#include <vector>
+#include <array>
+using namespace std;
+
+// Fixed size array
+int arr[5];
+
+// With initialization
+int arr[] = {1, 2, 3, 4, 5};
+int arr[5] = {1, 2, 3, 4, 5};
+
+// Using std::array (C++11)
+array<int, 5> arr = {1, 2, 3, 4, 5};
+
+// Using std::vector (dynamic)
+vector<int> arr;
+vector<int> arr = {1, 2, 3, 4, 5};
+vector<int> arr(5);  // 5 elements initialized to 0
+vector<int> arr(5, 10);  // 5 elements initialized to 10
+
+// 2D array
+int matrix[3][3];
+int matrix[3][3] = {{1, 2, 3}, {4, 5, 6}, {7, 8, 9}};
+
+// 2D vector
+vector<vector<int>> matrix(3, vector<int>(3));  // 3x3 matrix
+vector<vector<int>> matrix = {{1, 2, 3}, {4, 5, 6}, {7, 8, 9}};
+```
+
+### Java
+```java
+import java.util.ArrayList;
+import java.util.Arrays;
+
+// Declaration
+int[] arr = new int[5];
+
+// With initialization
+int[] arr = {1, 2, 3, 4, 5};
+int[] arr = new int[]{1, 2, 3, 4, 5};
+
+// Using ArrayList (dynamic)
+ArrayList<Integer> arr = new ArrayList<>();
+ArrayList<Integer> arr = new ArrayList<>(Arrays.asList(1, 2, 3, 4, 5));
+
+// 2D array
+int[][] matrix = new int[3][3];
+int[][] matrix = {{1, 2, 3}, {4, 5, 6}, {7, 8, 9}};
+
+// 2D ArrayList
+ArrayList<ArrayList<Integer>> matrix = new ArrayList<>();
+```
+
 ### Python
 ```python
 # Empty array
@@ -30,24 +112,76 @@ arr = [i for i in range(5)]  # [0, 1, 2, 3, 4]
 matrix = [[0] * 3 for _ in range(3)]  # 3x3 matrix
 ```
 
-### Java
-```java
-// Declaration
-int[] arr = new int[5];
-
-// With initialization
-int[] arr = {1, 2, 3, 4, 5};
-
-// 2D array
-int[][] matrix = new int[3][3];
-int[][] matrix = {{1,2,3}, {4,5,6}, {7,8,9}};
-```
-
 ---
 
 ## Basic Operations
 
 ### 1. Access/Read
+
+#### C
+```c
+int access_element(int arr[], int size, int index) {
+    /*
+     * Access element at given index
+     * Time: O(1)
+     * Space: O(1)
+     */
+    if (index >= 0 && index < size) {
+        return arr[index];
+    }
+    return -1;  // Error value
+}
+
+int main() {
+    int arr[] = {10, 20, 30, 40, 50};
+    int size = sizeof(arr) / sizeof(arr[0]);
+    printf("%d\n", access_element(arr, size, 2));  // 30
+    return 0;
+}
+```
+
+#### C++
+```cpp
+int access_element(vector<int>& arr, int index) {
+    /*
+     * Access element at given index
+     * Time: O(1)
+     * Space: O(1)
+     */
+    if (index >= 0 && index < arr.size()) {
+        return arr[index];
+    }
+    throw out_of_range("Index out of bounds");
+}
+
+int main() {
+    vector<int> arr = {10, 20, 30, 40, 50};
+    cout << access_element(arr, 2) << endl;  // 30
+    return 0;
+}
+```
+
+#### Java
+```java
+public static int accessElement(int[] arr, int index) {
+    /*
+     * Access element at given index
+     * Time: O(1)
+     * Space: O(1)
+     */
+    if (index >= 0 && index < arr.length) {
+        return arr[index];
+    }
+    throw new IndexOutOfBoundsException("Index out of bounds");
+}
+
+public static void main(String[] args) {
+    int[] arr = {10, 20, 30, 40, 50};
+    System.out.println(accessElement(arr, 2));  // 30
+}
+```
+
+#### Python
 ```python
 def access_element(arr, index):
     """
@@ -66,6 +200,61 @@ print(access_element(arr, 2))  # 30
 ### 2. Insert
 
 #### At End
+
+##### C
+```c
+int* insert_at_end(int* arr, int* size, int* capacity, int element) {
+    /*
+     * Insert at end (dynamic array)
+     * Time: O(1) amortized
+     * Space: O(1)
+     */
+    if (*size >= *capacity) {
+        *capacity *= 2;
+        arr = (int*)realloc(arr, (*capacity) * sizeof(int));
+    }
+    arr[*size] = element;
+    (*size)++;
+    return arr;
+}
+```
+
+##### C++
+```cpp
+void insert_at_end(vector<int>& arr, int element) {
+    /*
+     * Insert at end
+     * Time: O(1) amortized
+     * Space: O(1)
+     */
+    arr.push_back(element);
+}
+
+// Example
+vector<int> arr = {1, 2, 3};
+insert_at_end(arr, 4);
+// arr is now {1, 2, 3, 4}
+```
+
+##### Java
+```java
+public static ArrayList<Integer> insertAtEnd(ArrayList<Integer> arr, int element) {
+    /*
+     * Insert at end
+     * Time: O(1) amortized
+     * Space: O(1)
+     */
+    arr.add(element);
+    return arr;
+}
+
+// Example
+ArrayList<Integer> arr = new ArrayList<>(Arrays.asList(1, 2, 3));
+insertAtEnd(arr, 4);
+// arr is now [1, 2, 3, 4]
+```
+
+##### Python
 ```python
 def insert_at_end(arr, element):
     """
@@ -82,6 +271,64 @@ print(arr)  # [1, 2, 3, 4]
 ```
 
 #### At Beginning
+
+##### C
+```c
+int* insert_at_beginning(int* arr, int* size, int* capacity, int element) {
+    /*
+     * Insert at beginning
+     * Time: O(n) - all elements shift
+     * Space: O(1)
+     */
+    if (*size >= *capacity) {
+        *capacity *= 2;
+        arr = (int*)realloc(arr, (*capacity) * sizeof(int));
+    }
+    for (int i = *size; i > 0; i--) {
+        arr[i] = arr[i - 1];
+    }
+    arr[0] = element;
+    (*size)++;
+    return arr;
+}
+```
+
+##### C++
+```cpp
+void insert_at_beginning(vector<int>& arr, int element) {
+    /*
+     * Insert at beginning
+     * Time: O(n) - all elements shift
+     * Space: O(1)
+     */
+    arr.insert(arr.begin(), element);
+}
+
+// Example
+vector<int> arr = {2, 3, 4};
+insert_at_beginning(arr, 1);
+// arr is now {1, 2, 3, 4}
+```
+
+##### Java
+```java
+public static ArrayList<Integer> insertAtBeginning(ArrayList<Integer> arr, int element) {
+    /*
+     * Insert at beginning
+     * Time: O(n) - all elements shift
+     * Space: O(1)
+     */
+    arr.add(0, element);
+    return arr;
+}
+
+// Example
+ArrayList<Integer> arr = new ArrayList<>(Arrays.asList(2, 3, 4));
+insertAtBeginning(arr, 1);
+// arr is now [1, 2, 3, 4]
+```
+
+##### Python
 ```python
 def insert_at_beginning(arr, element):
     """
@@ -98,6 +345,71 @@ print(arr)  # [1, 2, 3, 4]
 ```
 
 #### At Position
+
+##### C
+```c
+int* insert_at_position(int* arr, int* size, int* capacity, int index, int element) {
+    /*
+     * Insert at specific position
+     * Time: O(n) - elements after index shift
+     * Space: O(1)
+     */
+    if (index < 0 || index > *size) return arr;
+    
+    if (*size >= *capacity) {
+        *capacity *= 2;
+        arr = (int*)realloc(arr, (*capacity) * sizeof(int));
+    }
+    
+    for (int i = *size; i > index; i--) {
+        arr[i] = arr[i - 1];
+    }
+    arr[index] = element;
+    (*size)++;
+    return arr;
+}
+```
+
+##### C++
+```cpp
+void insert_at_position(vector<int>& arr, int index, int element) {
+    /*
+     * Insert at specific position
+     * Time: O(n) - elements after index shift
+     * Space: O(1)
+     */
+    if (index >= 0 && index <= arr.size()) {
+        arr.insert(arr.begin() + index, element);
+    }
+}
+
+// Example
+vector<int> arr = {1, 2, 4, 5};
+insert_at_position(arr, 2, 3);
+// arr is now {1, 2, 3, 4, 5}
+```
+
+##### Java
+```java
+public static ArrayList<Integer> insertAtPosition(ArrayList<Integer> arr, int index, int element) {
+    /*
+     * Insert at specific position
+     * Time: O(n) - elements after index shift
+     * Space: O(1)
+     */
+    if (index >= 0 && index <= arr.size()) {
+        arr.add(index, element);
+    }
+    return arr;
+}
+
+// Example
+ArrayList<Integer> arr = new ArrayList<>(Arrays.asList(1, 2, 4, 5));
+insertAtPosition(arr, 2, 3);
+// arr is now [1, 2, 3, 4, 5]
+```
+
+##### Python
 ```python
 def insert_at_position(arr, index, element):
     """
@@ -163,6 +475,85 @@ def delete_from_position(arr, index):
 ### 4. Search
 
 #### Linear Search
+
+##### C
+```c
+int linear_search(int arr[], int size, int target) {
+    /*
+     * Search for target element
+     * Time: O(n)
+     * Space: O(1)
+     */
+    for (int i = 0; i < size; i++) {
+        if (arr[i] == target) {
+            return i;
+        }
+    }
+    return -1;
+}
+
+int main() {
+    int arr[] = {10, 23, 45, 70, 11, 15};
+    int size = sizeof(arr) / sizeof(arr[0]);
+    printf("%d\n", linear_search(arr, size, 70));  // 3
+    return 0;
+}
+```
+
+##### C++
+```cpp
+#include <algorithm>
+
+int linear_search(vector<int>& arr, int target) {
+    /*
+     * Search for target element
+     * Time: O(n)
+     * Space: O(1)
+     */
+    for (int i = 0; i < arr.size(); i++) {
+        if (arr[i] == target) {
+            return i;
+        }
+    }
+    return -1;
+}
+
+// Alternative using STL
+int linear_search_stl(vector<int>& arr, int target) {
+    auto it = find(arr.begin(), arr.end(), target);
+    return (it != arr.end()) ? distance(arr.begin(), it) : -1;
+}
+
+int main() {
+    vector<int> arr = {10, 23, 45, 70, 11, 15};
+    cout << linear_search(arr, 70) << endl;  // 3
+    return 0;
+}
+```
+
+##### Java
+```java
+public static int linearSearch(int[] arr, int target) {
+    /*
+     * Search for target element
+     * Time: O(n)
+     * Space: O(1)
+     */
+    for (int i = 0; i < arr.length; i++) {
+        if (arr[i] == target) {
+            return i;
+        }
+    }
+    return -1;
+}
+
+public static void main(String[] args) {
+    int[] arr = {10, 23, 45, 70, 11, 15};
+    System.out.println(linearSearch(arr, 70));  // 3
+}
+```
+
+##### Python
 ```python
 def linear_search(arr, target):
     """
@@ -180,6 +571,120 @@ print(linear_search(arr, 70))  # 3
 ```
 
 #### Binary Search (Sorted Array)
+
+##### C
+```c
+int binary_search(int arr[], int size, int target) {
+    /*
+     * Binary search on sorted array
+     * Time: O(log n)
+     * Space: O(1)
+     */
+    int left = 0, right = size - 1;
+    
+    while (left <= right) {
+        int mid = left + (right - left) / 2;
+        
+        if (arr[mid] == target) {
+            return mid;
+        } else if (arr[mid] < target) {
+            left = mid + 1;
+        } else {
+            right = mid - 1;
+        }
+    }
+    
+    return -1;
+}
+
+int main() {
+    int arr[] = {2, 5, 8, 12, 16, 23, 38, 45};
+    int size = sizeof(arr) / sizeof(arr[0]);
+    printf("%d\n", binary_search(arr, size, 23));  // 5
+    return 0;
+}
+```
+
+##### C++
+```cpp
+#include <algorithm>
+
+int binary_search(vector<int>& arr, int target) {
+    /*
+     * Binary search on sorted array
+     * Time: O(log n)
+     * Space: O(1)
+     */
+    int left = 0, right = arr.size() - 1;
+    
+    while (left <= right) {
+        int mid = left + (right - left) / 2;
+        
+        if (arr[mid] == target) {
+            return mid;
+        } else if (arr[mid] < target) {
+            left = mid + 1;
+        } else {
+            right = mid - 1;
+        }
+    }
+    
+    return -1;
+}
+
+// Alternative using STL
+int binary_search_stl(vector<int>& arr, int target) {
+    auto it = lower_bound(arr.begin(), arr.end(), target);
+    if (it != arr.end() && *it == target) {
+        return distance(arr.begin(), it);
+    }
+    return -1;
+}
+
+int main() {
+    vector<int> arr = {2, 5, 8, 12, 16, 23, 38, 45};
+    cout << binary_search(arr, 23) << endl;  // 5
+    return 0;
+}
+```
+
+##### Java
+```java
+public static int binarySearch(int[] arr, int target) {
+    /*
+     * Binary search on sorted array
+     * Time: O(log n)
+     * Space: O(1)
+     */
+    int left = 0, right = arr.length - 1;
+    
+    while (left <= right) {
+        int mid = left + (right - left) / 2;
+        
+        if (arr[mid] == target) {
+            return mid;
+        } else if (arr[mid] < target) {
+            left = mid + 1;
+        } else {
+            right = mid - 1;
+        }
+    }
+    
+    return -1;
+}
+
+// Alternative using Java's built-in method
+public static int binarySearchBuiltin(int[] arr, int target) {
+    return Arrays.binarySearch(arr, target);
+}
+
+public static void main(String[] args) {
+    int[] arr = {2, 5, 8, 12, 16, 23, 38, 45};
+    System.out.println(binarySearch(arr, 23));  // 5
+}
+```
+
+##### Python
 ```python
 def binary_search(arr, target):
     """
@@ -210,6 +715,100 @@ print(binary_search(arr, 23))  # 5
 ## Common Array Problems
 
 ### 1. Reverse Array
+
+#### C
+```c
+void reverse_array(int arr[], int size) {
+    /*
+     * Reverse array in-place
+     * Time: O(n)
+     * Space: O(1)
+     */
+    int left = 0, right = size - 1;
+    
+    while (left < right) {
+        int temp = arr[left];
+        arr[left] = arr[right];
+        arr[right] = temp;
+        left++;
+        right--;
+    }
+}
+
+int main() {
+    int arr[] = {1, 2, 3, 4, 5};
+    int size = sizeof(arr) / sizeof(arr[0]);
+    reverse_array(arr, size);
+    // arr is now {5, 4, 3, 2, 1}
+    return 0;
+}
+```
+
+#### C++
+```cpp
+void reverse_array(vector<int>& arr) {
+    /*
+     * Reverse array in-place
+     * Time: O(n)
+     * Space: O(1)
+     */
+    int left = 0, right = arr.size() - 1;
+    
+    while (left < right) {
+        swap(arr[left], arr[right]);
+        left++;
+        right--;
+    }
+}
+
+// Alternative using STL
+void reverse_array_stl(vector<int>& arr) {
+    reverse(arr.begin(), arr.end());
+}
+
+int main() {
+    vector<int> arr = {1, 2, 3, 4, 5};
+    reverse_array(arr);
+    // arr is now {5, 4, 3, 2, 1}
+    return 0;
+}
+```
+
+#### Java
+```java
+import java.util.ArrayList;
+import java.util.Collections;
+
+public static void reverseArray(int[] arr) {
+    /*
+     * Reverse array in-place
+     * Time: O(n)
+     * Space: O(1)
+     */
+    int left = 0, right = arr.length - 1;
+    
+    while (left < right) {
+        int temp = arr[left];
+        arr[left] = arr[right];
+        arr[right] = temp;
+        left++;
+        right--;
+    }
+}
+
+// For ArrayList
+public static void reverseArrayList(ArrayList<Integer> arr) {
+    Collections.reverse(arr);
+}
+
+public static void main(String[] args) {
+    int[] arr = {1, 2, 3, 4, 5};
+    reverseArray(arr);
+    // arr is now {5, 4, 3, 2, 1}
+}
+```
+
+#### Python
 ```python
 def reverse_array(arr):
     """

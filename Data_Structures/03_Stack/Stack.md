@@ -32,6 +32,220 @@ A Stack is a linear data structure that follows the **LIFO (Last In First Out)**
 
 ## 1. Array-based Stack
 
+### C
+```c
+#include <stdio.h>
+#include <stdlib.h>
+#include <stdbool.h>
+
+#define MAX_SIZE 100
+
+typedef struct {
+    int items[MAX_SIZE];
+    int top;
+} Stack;
+
+// Initialize stack
+Stack* createStack() {
+    Stack* stack = (Stack*)malloc(sizeof(Stack));
+    stack->top = -1;
+    return stack;
+}
+
+// Check if stack is empty
+bool isEmpty(Stack* stack) {
+    return stack->top == -1;
+}
+
+// Check if stack is full
+bool isFull(Stack* stack) {
+    return stack->top == MAX_SIZE - 1;
+}
+
+// Push element
+void push(Stack* stack, int data) {
+    if (isFull(stack)) {
+        printf("Stack Overflow\n");
+        return;
+    }
+    stack->items[++stack->top] = data;
+}
+
+// Pop element
+int pop(Stack* stack) {
+    if (isEmpty(stack)) {
+        printf("Stack Underflow\n");
+        return -1;
+    }
+    return stack->items[stack->top--];
+}
+
+// Peek element
+int peek(Stack* stack) {
+    if (isEmpty(stack)) {
+        printf("Stack is empty\n");
+        return -1;
+    }
+    return stack->items[stack->top];
+}
+
+// Get size
+int size(Stack* stack) {
+    return stack->top + 1;
+}
+```
+
+### C++
+```cpp
+#include <iostream>
+#include <vector>
+#include <stack>
+#include <stdexcept>
+using namespace std;
+
+class ArrayStack {
+private:
+    vector<int> items;
+    int capacity;
+    
+public:
+    ArrayStack(int cap = 100) : capacity(cap) {}
+    
+    // Push element
+    void push(int data) {
+        /*
+         * Time: O(1)
+         * Space: O(1)
+         */
+        if (items.size() >= capacity) {
+            throw overflow_error("Stack is full");
+        }
+        items.push_back(data);
+    }
+    
+    // Pop element
+    int pop() {
+        /*
+         * Time: O(1)
+         * Space: O(1)
+         */
+        if (isEmpty()) {
+            throw underflow_error("Stack is empty");
+        }
+        int value = items.back();
+        items.pop_back();
+        return value;
+    }
+    
+    // Peek element
+    int peek() {
+        /*
+         * Time: O(1)
+         */
+        if (isEmpty()) {
+            throw underflow_error("Stack is empty");
+        }
+        return items.back();
+    }
+    
+    // Check if empty
+    bool isEmpty() {
+        return items.empty();
+    }
+    
+    // Get size
+    int size() {
+        return items.size();
+    }
+};
+
+// Using STL stack
+void useSTLStack() {
+    stack<int> s;
+    s.push(10);
+    s.push(20);
+    s.push(30);
+    cout << s.top() << endl;  // 30
+    s.pop();
+    cout << s.size() << endl;  // 2
+}
+```
+
+### Java
+```java
+import java.util.ArrayList;
+import java.util.Stack;
+
+class ArrayStack {
+    private ArrayList<Integer> items;
+    private int capacity;
+    
+    public ArrayStack(int capacity) {
+        this.capacity = capacity;
+        this.items = new ArrayList<>();
+    }
+    
+    // Push element
+    public void push(int data) {
+        /*
+         * Time: O(1)
+         * Space: O(1)
+         */
+        if (items.size() >= capacity) {
+            throw new StackOverflowError("Stack is full");
+        }
+        items.add(data);
+    }
+    
+    // Pop element
+    public int pop() {
+        /*
+         * Time: O(1)
+         * Space: O(1)
+         */
+        if (isEmpty()) {
+            throw new IllegalStateException("Stack is empty");
+        }
+        return items.remove(items.size() - 1);
+    }
+    
+    // Peek element
+    public int peek() {
+        /*
+         * Time: O(1)
+         */
+        if (isEmpty()) {
+            throw new IllegalStateException("Stack is empty");
+        }
+        return items.get(items.size() - 1);
+    }
+    
+    // Check if empty
+    public boolean isEmpty() {
+        return items.isEmpty();
+    }
+    
+    // Get size
+    public int size() {
+        return items.size();
+    }
+}
+
+// Using Java's Stack class
+public class StackExample {
+    public static void main(String[] args) {
+        Stack<Integer> stack = new Stack<>();
+        stack.push(10);
+        stack.push(20);
+        stack.push(30);
+        System.out.println(stack.peek());  // 30
+        stack.pop();
+        System.out.println(stack.size());  // 2
+    }
+}
+```
+
+### Python
 ```python
 class ArrayStack:
     def __init__(self, capacity=100):
@@ -231,6 +445,135 @@ print(f"Pop: {stack.pop()}")  # 30
 
 ### 1. Balanced Parentheses
 
+#### C
+```c
+#include <string.h>
+
+bool isMatching(char open, char close) {
+    return (open == '(' && close == ')') ||
+           (open == '[' && close == ']') ||
+           (open == '{' && close == '}');
+}
+
+bool isBalanced(char* expression) {
+    /*
+     * Check if parentheses are balanced
+     * Time: O(n)
+     * Space: O(n)
+     */
+    Stack* stack = createStack();
+    
+    for (int i = 0; i < strlen(expression); i++) {
+        char ch = expression[i];
+        
+        if (ch == '(' || ch == '[' || ch == '{') {
+            push(stack, ch);
+        } else if (ch == ')' || ch == ']' || ch == '}') {
+            if (isEmpty(stack)) {
+                return false;
+            }
+            char top = pop(stack);
+            if (!isMatching(top, ch)) {
+                return false;
+            }
+        }
+    }
+    
+    return isEmpty(stack);
+}
+
+// Test cases
+int main() {
+    printf("%d\n", isBalanced("()"));          // 1 (true)
+    printf("%d\n", isBalanced("()[]{}"));      // 1 (true)
+    printf("%d\n", isBalanced("(]"));          // 0 (false)
+    printf("%d\n", isBalanced("([)]"));        // 0 (false)
+    printf("%d\n", isBalanced("{[]}"));        // 1 (true)
+    return 0;
+}
+```
+
+#### C++
+```cpp
+#include <unordered_map>
+
+bool isBalanced(string expression) {
+    /*
+     * Check if parentheses are balanced
+     * Time: O(n)
+     * Space: O(n)
+     */
+    stack<char> s;
+    unordered_map<char, char> matching = {
+        {'(', ')'}, {'[', ']'}, {'{', '}'}
+    };
+    
+    for (char ch : expression) {
+        if (matching.count(ch)) {  // Opening bracket
+            s.push(ch);
+        } else if (ch == ')' || ch == ']' || ch == '}') {  // Closing bracket
+            if (s.empty() || matching[s.top()] != ch) {
+                return false;
+            }
+            s.pop();
+        }
+    }
+    
+    return s.empty();
+}
+
+// Test cases
+int main() {
+    cout << isBalanced("()") << endl;          // 1 (true)
+    cout << isBalanced("()[]{}") << endl;      // 1 (true)
+    cout << isBalanced("(]") << endl;          // 0 (false)
+    cout << isBalanced("([)]") << endl;        // 0 (false)
+    cout << isBalanced("{[]}") << endl;        // 1 (true)
+    return 0;
+}
+```
+
+#### Java
+```java
+import java.util.HashMap;
+import java.util.Stack;
+
+public static boolean isBalanced(String expression) {
+    /*
+     * Check if parentheses are balanced
+     * Time: O(n)
+     * Space: O(n)
+     */
+    Stack<Character> stack = new Stack<>();
+    HashMap<Character, Character> matching = new HashMap<>();
+    matching.put('(', ')');
+    matching.put('[', ']');
+    matching.put('{', '}');
+    
+    for (char ch : expression.toCharArray()) {
+        if (matching.containsKey(ch)) {  // Opening bracket
+            stack.push(ch);
+        } else if (ch == ')' || ch == ']' || ch == '}') {  // Closing bracket
+            if (stack.isEmpty() || matching.get(stack.pop()) != ch) {
+                return false;
+            }
+        }
+    }
+    
+    return stack.isEmpty();
+}
+
+// Test cases
+public static void main(String[] args) {
+    System.out.println(isBalanced("()"));          // true
+    System.out.println(isBalanced("()[]{}"));      // true
+    System.out.println(isBalanced("(]"));          // false
+    System.out.println(isBalanced("([)]"));        // false
+    System.out.println(isBalanced("{[]}"));        // true
+}
+```
+
+#### Python
 ```python
 def is_balanced(expression):
     """
