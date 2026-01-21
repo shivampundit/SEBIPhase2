@@ -27,6 +27,7 @@ def divide_and_conquer(problem):
 ```c
 // C Implementation
 #include <stdio.h>
+#include <stdlib.h>
 #include <stdbool.h>
 
 // Helper function prototypes (to be implemented based on problem)
@@ -223,7 +224,7 @@ int max_subarray_dc(int arr[], int left, int right) {
         return arr[left];
     }
     
-    int mid = (left + right) / 2;
+    int mid = left + (right - left) / 2;  // Avoid overflow
     
     // Conquer
     int left_max = max_subarray_dc(arr, left, mid);
@@ -280,7 +281,7 @@ public:
             return arr[left];
         }
         
-        int mid = (left + right) / 2;
+        int mid = left + (right - left) / 2;  // Avoid overflow
         
         // Conquer
         int leftMax = maxSubarrayDC(arr, left, mid);
@@ -331,7 +332,7 @@ public class MaxSubarray {
             return arr[left];
         }
         
-        int mid = (left + right) / 2;
+        int mid = left + (right - left) / 2;  // Avoid overflow
         
         // Conquer
         int leftMax = maxSubarrayDC(arr, left, mid);
@@ -1523,7 +1524,7 @@ int merge_sort_count(int arr[], int temp[], int left, int right) {
     int inv_count = 0;
     
     if (left < right) {
-        int mid = (left + right) / 2;
+        int mid = left + (right - left) / 2;  // Avoid overflow
         
         inv_count += merge_sort_count(arr, temp, left, mid);
         inv_count += merge_sort_count(arr, temp, mid + 1, right);
@@ -1597,7 +1598,7 @@ private:
         int invCount = 0;
         
         if (left < right) {
-            int mid = (left + right) / 2;
+            int mid = left + (right - left) / 2;  // Avoid overflow
             
             invCount += mergeSortCount(arr, temp, left, mid);
             invCount += mergeSortCount(arr, temp, mid + 1, right);
@@ -1667,7 +1668,7 @@ public class InversionCounter {
         int invCount = 0;
         
         if (left < right) {
-            int mid = (left + right) / 2;
+            int mid = left + (right - left) / 2;  // Avoid overflow
             
             invCount += mergeSortCount(arr, temp, left, mid);
             invCount += mergeSortCount(arr, temp, mid + 1, right);
