@@ -692,8 +692,8 @@ char* lcs_string(char *s1, char *s2) {
     }
     
     // Free memory
-    for (int i = 0; i <= m; i++)
-        free(dp[i]);
+    for (int k = 0; k <= m; k++)
+        free(dp[k]);
     free(dp);
     
     return lcs;
@@ -1327,6 +1327,7 @@ int min(int a, int b) {
 
 int coin_change_min(int coins[], int n, int amount) {
     int *dp = (int *)malloc((amount + 1) * sizeof(int));
+    if (!dp) return -1;  // Handle allocation failure
     
     dp[0] = 0;
     for (int i = 1; i <= amount; i++)
