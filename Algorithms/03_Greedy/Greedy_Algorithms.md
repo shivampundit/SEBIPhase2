@@ -1195,8 +1195,8 @@ int main() {
     int totalFreq = 0;
     double avgLength = 0.0;
     for (auto& p : charFreq) totalFreq += p.second;
-    for (auto& p : codes) {
-        avgLength += codes[p.first].length() * charFreq[p.first];
+    for (auto& codePair : codes) {
+        avgLength += codes[codePair.first].length() * charFreq[codePair.first];
     }
     avgLength /= totalFreq;
     
