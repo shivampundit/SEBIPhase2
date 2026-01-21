@@ -41,6 +41,111 @@ arr = [64, 34, 25, 12, 22, 11, 90]
 print(bubble_sort(arr))  # Output: [11, 12, 22, 25, 34, 64, 90]
 ```
 
+### Implementation (C)
+```c
+#include <stdio.h>
+#include <stdbool.h>
+
+void bubble_sort(int arr[], int n) {
+    for (int i = 0; i < n; i++) {
+        bool swapped = false;
+        for (int j = 0; j < n - i - 1; j++) {
+            if (arr[j] > arr[j + 1]) {
+                // Swap arr[j] and arr[j+1]
+                int temp = arr[j];
+                arr[j] = arr[j + 1];
+                arr[j + 1] = temp;
+                swapped = true;
+            }
+        }
+        if (!swapped)  // Optimization: stop if no swaps
+            break;
+    }
+}
+
+// Example
+int main() {
+    int arr[] = {64, 34, 25, 12, 22, 11, 90};
+    int n = sizeof(arr) / sizeof(arr[0]);
+    bubble_sort(arr, n);
+    
+    printf("Sorted array: ");
+    for (int i = 0; i < n; i++)
+        printf("%d ", arr[i]);
+    // Output: 11 12 22 25 34 64 90
+    return 0;
+}
+```
+
+### Implementation (C++)
+```cpp
+#include <iostream>
+#include <vector>
+using namespace std;
+
+void bubble_sort(vector<int>& arr) {
+    int n = arr.size();
+    for (int i = 0; i < n; i++) {
+        bool swapped = false;
+        for (int j = 0; j < n - i - 1; j++) {
+            if (arr[j] > arr[j + 1]) {
+                // Swap arr[j] and arr[j+1]
+                swap(arr[j], arr[j + 1]);
+                swapped = true;
+            }
+        }
+        if (!swapped)  // Optimization: stop if no swaps
+            break;
+    }
+}
+
+// Example
+int main() {
+    vector<int> arr = {64, 34, 25, 12, 22, 11, 90};
+    bubble_sort(arr);
+    
+    cout << "Sorted array: ";
+    for (int num : arr)
+        cout << num << " ";
+    // Output: 11 12 22 25 34 64 90
+    return 0;
+}
+```
+
+### Implementation (Java)
+```java
+public class BubbleSort {
+    public static void bubbleSort(int[] arr) {
+        int n = arr.length;
+        for (int i = 0; i < n; i++) {
+            boolean swapped = false;
+            for (int j = 0; j < n - i - 1; j++) {
+                if (arr[j] > arr[j + 1]) {
+                    // Swap arr[j] and arr[j+1]
+                    int temp = arr[j];
+                    arr[j] = arr[j + 1];
+                    arr[j + 1] = temp;
+                    swapped = true;
+                }
+            }
+            if (!swapped)  // Optimization: stop if no swaps
+                break;
+        }
+    }
+    
+    // Example
+    public static void main(String[] args) {
+        int[] arr = {64, 34, 25, 12, 22, 11, 90};
+        bubbleSort(arr);
+        
+        System.out.print("Sorted array: ");
+        for (int num : arr)
+            System.out.print(num + " ");
+        // Output: 11 12 22 25 34 64 90
+    }
+}
+```
+
 ### Dry Run Example
 ```
 Initial: [5, 3, 8, 4, 2]
@@ -113,6 +218,104 @@ arr = [64, 25, 12, 22, 11]
 print(selection_sort(arr))  # Output: [11, 12, 22, 25, 64]
 ```
 
+### Implementation (C)
+```c
+#include <stdio.h>
+
+void selection_sort(int arr[], int n) {
+    for (int i = 0; i < n; i++) {
+        int min_idx = i;
+        for (int j = i + 1; j < n; j++) {
+            if (arr[j] < arr[min_idx]) {
+                min_idx = j;
+            }
+        }
+        // Swap arr[i] and arr[min_idx]
+        int temp = arr[i];
+        arr[i] = arr[min_idx];
+        arr[min_idx] = temp;
+    }
+}
+
+// Example
+int main() {
+    int arr[] = {64, 25, 12, 22, 11};
+    int n = sizeof(arr) / sizeof(arr[0]);
+    selection_sort(arr, n);
+    
+    printf("Sorted array: ");
+    for (int i = 0; i < n; i++)
+        printf("%d ", arr[i]);
+    // Output: 11 12 22 25 64
+    return 0;
+}
+```
+
+### Implementation (C++)
+```cpp
+#include <iostream>
+#include <vector>
+using namespace std;
+
+void selection_sort(vector<int>& arr) {
+    int n = arr.size();
+    for (int i = 0; i < n; i++) {
+        int min_idx = i;
+        for (int j = i + 1; j < n; j++) {
+            if (arr[j] < arr[min_idx]) {
+                min_idx = j;
+            }
+        }
+        // Swap arr[i] and arr[min_idx]
+        swap(arr[i], arr[min_idx]);
+    }
+}
+
+// Example
+int main() {
+    vector<int> arr = {64, 25, 12, 22, 11};
+    selection_sort(arr);
+    
+    cout << "Sorted array: ";
+    for (int num : arr)
+        cout << num << " ";
+    // Output: 11 12 22 25 64
+    return 0;
+}
+```
+
+### Implementation (Java)
+```java
+public class SelectionSort {
+    public static void selectionSort(int[] arr) {
+        int n = arr.length;
+        for (int i = 0; i < n; i++) {
+            int min_idx = i;
+            for (int j = i + 1; j < n; j++) {
+                if (arr[j] < arr[min_idx]) {
+                    min_idx = j;
+                }
+            }
+            // Swap arr[i] and arr[min_idx]
+            int temp = arr[i];
+            arr[i] = arr[min_idx];
+            arr[min_idx] = temp;
+        }
+    }
+    
+    // Example
+    public static void main(String[] args) {
+        int[] arr = {64, 25, 12, 22, 11};
+        selectionSort(arr);
+        
+        System.out.print("Sorted array: ");
+        for (int num : arr)
+            System.out.print(num + " ");
+        // Output: 11 12 22 25 64
+    }
+}
+```
+
 ### Dry Run Example
 ```
 Initial: [29, 10, 14, 37, 13]
@@ -174,6 +377,100 @@ def insertion_sort(arr):
 # Example
 arr = [12, 11, 13, 5, 6]
 print(insertion_sort(arr))  # Output: [5, 6, 11, 12, 13]
+```
+
+### Implementation (C)
+```c
+#include <stdio.h>
+
+void insertion_sort(int arr[], int n) {
+    for (int i = 1; i < n; i++) {
+        int key = arr[i];
+        int j = i - 1;
+        
+        while (j >= 0 && arr[j] > key) {
+            arr[j + 1] = arr[j];
+            j--;
+        }
+        arr[j + 1] = key;
+    }
+}
+
+// Example
+int main() {
+    int arr[] = {12, 11, 13, 5, 6};
+    int n = sizeof(arr) / sizeof(arr[0]);
+    insertion_sort(arr, n);
+    
+    printf("Sorted array: ");
+    for (int i = 0; i < n; i++)
+        printf("%d ", arr[i]);
+    // Output: 5 6 11 12 13
+    return 0;
+}
+```
+
+### Implementation (C++)
+```cpp
+#include <iostream>
+#include <vector>
+using namespace std;
+
+void insertion_sort(vector<int>& arr) {
+    int n = arr.size();
+    for (int i = 1; i < n; i++) {
+        int key = arr[i];
+        int j = i - 1;
+        
+        while (j >= 0 && arr[j] > key) {
+            arr[j + 1] = arr[j];
+            j--;
+        }
+        arr[j + 1] = key;
+    }
+}
+
+// Example
+int main() {
+    vector<int> arr = {12, 11, 13, 5, 6};
+    insertion_sort(arr);
+    
+    cout << "Sorted array: ";
+    for (int num : arr)
+        cout << num << " ";
+    // Output: 5 6 11 12 13
+    return 0;
+}
+```
+
+### Implementation (Java)
+```java
+public class InsertionSort {
+    public static void insertionSort(int[] arr) {
+        int n = arr.length;
+        for (int i = 1; i < n; i++) {
+            int key = arr[i];
+            int j = i - 1;
+            
+            while (j >= 0 && arr[j] > key) {
+                arr[j + 1] = arr[j];
+                j--;
+            }
+            arr[j + 1] = key;
+        }
+    }
+    
+    // Example
+    public static void main(String[] args) {
+        int[] arr = {12, 11, 13, 5, 6};
+        insertionSort(arr);
+        
+        System.out.print("Sorted array: ");
+        for (int num : arr)
+            System.out.print(num + " ");
+        // Output: 5 6 11 12 13
+    }
+}
 ```
 
 ### Dry Run Example
@@ -258,6 +555,182 @@ arr = [38, 27, 43, 3, 9, 82, 10]
 print(merge_sort(arr))  # Output: [3, 9, 10, 27, 38, 43, 82]
 ```
 
+### Implementation (C)
+```c
+#include <stdio.h>
+#include <stdlib.h>
+
+void merge(int arr[], int left, int mid, int right) {
+    int n1 = mid - left + 1;
+    int n2 = right - mid;
+    
+    // Create temporary arrays
+    int* L = (int*)malloc(n1 * sizeof(int));
+    int* R = (int*)malloc(n2 * sizeof(int));
+    
+    // Copy data to temporary arrays
+    for (int i = 0; i < n1; i++)
+        L[i] = arr[left + i];
+    for (int j = 0; j < n2; j++)
+        R[j] = arr[mid + 1 + j];
+    
+    // Merge the temporary arrays back
+    int i = 0, j = 0, k = left;
+    while (i < n1 && j < n2) {
+        if (L[i] <= R[j]) {
+            arr[k++] = L[i++];
+        } else {
+            arr[k++] = R[j++];
+        }
+    }
+    
+    // Copy remaining elements
+    while (i < n1)
+        arr[k++] = L[i++];
+    while (j < n2)
+        arr[k++] = R[j++];
+    
+    free(L);
+    free(R);
+}
+
+void merge_sort(int arr[], int left, int right) {
+    if (left < right) {
+        int mid = left + (right - left) / 2;
+        merge_sort(arr, left, mid);
+        merge_sort(arr, mid + 1, right);
+        merge(arr, left, mid, right);
+    }
+}
+
+// Example
+int main() {
+    int arr[] = {38, 27, 43, 3, 9, 82, 10};
+    int n = sizeof(arr) / sizeof(arr[0]);
+    merge_sort(arr, 0, n - 1);
+    
+    printf("Sorted array: ");
+    for (int i = 0; i < n; i++)
+        printf("%d ", arr[i]);
+    // Output: 3 9 10 27 38 43 82
+    return 0;
+}
+```
+
+### Implementation (C++)
+```cpp
+#include <iostream>
+#include <vector>
+using namespace std;
+
+void merge(vector<int>& arr, int left, int mid, int right) {
+    int n1 = mid - left + 1;
+    int n2 = right - mid;
+    
+    // Create temporary vectors
+    vector<int> L(n1), R(n2);
+    
+    // Copy data to temporary vectors
+    for (int i = 0; i < n1; i++)
+        L[i] = arr[left + i];
+    for (int j = 0; j < n2; j++)
+        R[j] = arr[mid + 1 + j];
+    
+    // Merge the temporary vectors back
+    int i = 0, j = 0, k = left;
+    while (i < n1 && j < n2) {
+        if (L[i] <= R[j]) {
+            arr[k++] = L[i++];
+        } else {
+            arr[k++] = R[j++];
+        }
+    }
+    
+    // Copy remaining elements
+    while (i < n1)
+        arr[k++] = L[i++];
+    while (j < n2)
+        arr[k++] = R[j++];
+}
+
+void merge_sort(vector<int>& arr, int left, int right) {
+    if (left < right) {
+        int mid = left + (right - left) / 2;
+        merge_sort(arr, left, mid);
+        merge_sort(arr, mid + 1, right);
+        merge(arr, left, mid, right);
+    }
+}
+
+// Example
+int main() {
+    vector<int> arr = {38, 27, 43, 3, 9, 82, 10};
+    merge_sort(arr, 0, arr.size() - 1);
+    
+    cout << "Sorted array: ";
+    for (int num : arr)
+        cout << num << " ";
+    // Output: 3 9 10 27 38 43 82
+    return 0;
+}
+```
+
+### Implementation (Java)
+```java
+public class MergeSort {
+    public static void merge(int[] arr, int left, int mid, int right) {
+        int n1 = mid - left + 1;
+        int n2 = right - mid;
+        
+        // Create temporary arrays
+        int[] L = new int[n1];
+        int[] R = new int[n2];
+        
+        // Copy data to temporary arrays
+        for (int i = 0; i < n1; i++)
+            L[i] = arr[left + i];
+        for (int j = 0; j < n2; j++)
+            R[j] = arr[mid + 1 + j];
+        
+        // Merge the temporary arrays back
+        int i = 0, j = 0, k = left;
+        while (i < n1 && j < n2) {
+            if (L[i] <= R[j]) {
+                arr[k++] = L[i++];
+            } else {
+                arr[k++] = R[j++];
+            }
+        }
+        
+        // Copy remaining elements
+        while (i < n1)
+            arr[k++] = L[i++];
+        while (j < n2)
+            arr[k++] = R[j++];
+    }
+    
+    public static void mergeSort(int[] arr, int left, int right) {
+        if (left < right) {
+            int mid = left + (right - left) / 2;
+            mergeSort(arr, left, mid);
+            mergeSort(arr, mid + 1, right);
+            merge(arr, left, mid, right);
+        }
+    }
+    
+    // Example
+    public static void main(String[] args) {
+        int[] arr = {38, 27, 43, 3, 9, 82, 10};
+        mergeSort(arr, 0, arr.length - 1);
+        
+        System.out.print("Sorted array: ");
+        for (int num : arr)
+            System.out.print(num + " ");
+        // Output: 3 9 10 27 38 43 82
+    }
+}
+```
+
 ### Dry Run Example
 ```
 Initial: [38, 27, 43, 3]
@@ -338,6 +811,140 @@ def partition(arr, low, high):
 # Example
 arr = [10, 7, 8, 9, 1, 5]
 print(quick_sort(arr, 0, len(arr)-1))  # Output: [1, 5, 7, 8, 9, 10]
+```
+
+### Implementation (C)
+```c
+#include <stdio.h>
+
+int partition(int arr[], int low, int high) {
+    int pivot = arr[high];
+    int i = low - 1;
+    
+    for (int j = low; j < high; j++) {
+        if (arr[j] < pivot) {
+            i++;
+            // Swap arr[i] and arr[j]
+            int temp = arr[i];
+            arr[i] = arr[j];
+            arr[j] = temp;
+        }
+    }
+    
+    // Swap arr[i+1] and arr[high]
+    int temp = arr[i + 1];
+    arr[i + 1] = arr[high];
+    arr[high] = temp;
+    return i + 1;
+}
+
+void quick_sort(int arr[], int low, int high) {
+    if (low < high) {
+        int pivot_index = partition(arr, low, high);
+        quick_sort(arr, low, pivot_index - 1);
+        quick_sort(arr, pivot_index + 1, high);
+    }
+}
+
+// Example
+int main() {
+    int arr[] = {10, 7, 8, 9, 1, 5};
+    int n = sizeof(arr) / sizeof(arr[0]);
+    quick_sort(arr, 0, n - 1);
+    
+    printf("Sorted array: ");
+    for (int i = 0; i < n; i++)
+        printf("%d ", arr[i]);
+    // Output: 1 5 7 8 9 10
+    return 0;
+}
+```
+
+### Implementation (C++)
+```cpp
+#include <iostream>
+#include <vector>
+using namespace std;
+
+int partition(vector<int>& arr, int low, int high) {
+    int pivot = arr[high];
+    int i = low - 1;
+    
+    for (int j = low; j < high; j++) {
+        if (arr[j] < pivot) {
+            i++;
+            swap(arr[i], arr[j]);
+        }
+    }
+    
+    swap(arr[i + 1], arr[high]);
+    return i + 1;
+}
+
+void quick_sort(vector<int>& arr, int low, int high) {
+    if (low < high) {
+        int pivot_index = partition(arr, low, high);
+        quick_sort(arr, low, pivot_index - 1);
+        quick_sort(arr, pivot_index + 1, high);
+    }
+}
+
+// Example
+int main() {
+    vector<int> arr = {10, 7, 8, 9, 1, 5};
+    quick_sort(arr, 0, arr.size() - 1);
+    
+    cout << "Sorted array: ";
+    for (int num : arr)
+        cout << num << " ";
+    // Output: 1 5 7 8 9 10
+    return 0;
+}
+```
+
+### Implementation (Java)
+```java
+public class QuickSort {
+    public static int partition(int[] arr, int low, int high) {
+        int pivot = arr[high];
+        int i = low - 1;
+        
+        for (int j = low; j < high; j++) {
+            if (arr[j] < pivot) {
+                i++;
+                // Swap arr[i] and arr[j]
+                int temp = arr[i];
+                arr[i] = arr[j];
+                arr[j] = temp;
+            }
+        }
+        
+        // Swap arr[i+1] and arr[high]
+        int temp = arr[i + 1];
+        arr[i + 1] = arr[high];
+        arr[high] = temp;
+        return i + 1;
+    }
+    
+    public static void quickSort(int[] arr, int low, int high) {
+        if (low < high) {
+            int pivot_index = partition(arr, low, high);
+            quickSort(arr, low, pivot_index - 1);
+            quickSort(arr, pivot_index + 1, high);
+        }
+    }
+    
+    // Example
+    public static void main(String[] args) {
+        int[] arr = {10, 7, 8, 9, 1, 5};
+        quickSort(arr, 0, arr.length - 1);
+        
+        System.out.print("Sorted array: ");
+        for (int num : arr)
+            System.out.print(num + " ");
+        // Output: 1 5 7 8 9 10
+    }
+}
 ```
 
 ### Dry Run Example
@@ -434,6 +1041,162 @@ def heapify(arr, n, i):
 # Example
 arr = [12, 11, 13, 5, 6, 7]
 print(heap_sort(arr))  # Output: [5, 6, 7, 11, 12, 13]
+```
+
+### Implementation (C)
+```c
+#include <stdio.h>
+
+void heapify(int arr[], int n, int i) {
+    int largest = i;
+    int left = 2 * i + 1;
+    int right = 2 * i + 2;
+    
+    if (left < n && arr[left] > arr[largest])
+        largest = left;
+    
+    if (right < n && arr[right] > arr[largest])
+        largest = right;
+    
+    if (largest != i) {
+        // Swap arr[i] and arr[largest]
+        int temp = arr[i];
+        arr[i] = arr[largest];
+        arr[largest] = temp;
+        heapify(arr, n, largest);
+    }
+}
+
+void heap_sort(int arr[], int n) {
+    // Build max heap
+    for (int i = n / 2 - 1; i >= 0; i--)
+        heapify(arr, n, i);
+    
+    // Extract elements one by one
+    for (int i = n - 1; i > 0; i--) {
+        // Swap arr[0] and arr[i]
+        int temp = arr[0];
+        arr[0] = arr[i];
+        arr[i] = temp;
+        heapify(arr, i, 0);
+    }
+}
+
+// Example
+int main() {
+    int arr[] = {12, 11, 13, 5, 6, 7};
+    int n = sizeof(arr) / sizeof(arr[0]);
+    heap_sort(arr, n);
+    
+    printf("Sorted array: ");
+    for (int i = 0; i < n; i++)
+        printf("%d ", arr[i]);
+    // Output: 5 6 7 11 12 13
+    return 0;
+}
+```
+
+### Implementation (C++)
+```cpp
+#include <iostream>
+#include <vector>
+using namespace std;
+
+void heapify(vector<int>& arr, int n, int i) {
+    int largest = i;
+    int left = 2 * i + 1;
+    int right = 2 * i + 2;
+    
+    if (left < n && arr[left] > arr[largest])
+        largest = left;
+    
+    if (right < n && arr[right] > arr[largest])
+        largest = right;
+    
+    if (largest != i) {
+        swap(arr[i], arr[largest]);
+        heapify(arr, n, largest);
+    }
+}
+
+void heap_sort(vector<int>& arr) {
+    int n = arr.size();
+    
+    // Build max heap
+    for (int i = n / 2 - 1; i >= 0; i--)
+        heapify(arr, n, i);
+    
+    // Extract elements one by one
+    for (int i = n - 1; i > 0; i--) {
+        swap(arr[0], arr[i]);
+        heapify(arr, i, 0);
+    }
+}
+
+// Example
+int main() {
+    vector<int> arr = {12, 11, 13, 5, 6, 7};
+    heap_sort(arr);
+    
+    cout << "Sorted array: ";
+    for (int num : arr)
+        cout << num << " ";
+    // Output: 5 6 7 11 12 13
+    return 0;
+}
+```
+
+### Implementation (Java)
+```java
+public class HeapSort {
+    public static void heapify(int[] arr, int n, int i) {
+        int largest = i;
+        int left = 2 * i + 1;
+        int right = 2 * i + 2;
+        
+        if (left < n && arr[left] > arr[largest])
+            largest = left;
+        
+        if (right < n && arr[right] > arr[largest])
+            largest = right;
+        
+        if (largest != i) {
+            // Swap arr[i] and arr[largest]
+            int temp = arr[i];
+            arr[i] = arr[largest];
+            arr[largest] = temp;
+            heapify(arr, n, largest);
+        }
+    }
+    
+    public static void heapSort(int[] arr) {
+        int n = arr.length;
+        
+        // Build max heap
+        for (int i = n / 2 - 1; i >= 0; i--)
+            heapify(arr, n, i);
+        
+        // Extract elements one by one
+        for (int i = n - 1; i > 0; i--) {
+            // Swap arr[0] and arr[i]
+            int temp = arr[0];
+            arr[0] = arr[i];
+            arr[i] = temp;
+            heapify(arr, i, 0);
+        }
+    }
+    
+    // Example
+    public static void main(String[] args) {
+        int[] arr = {12, 11, 13, 5, 6, 7};
+        heapSort(arr);
+        
+        System.out.print("Sorted array: ");
+        for (int num : arr)
+            System.out.print(num + " ");
+        // Output: 5 6 7 11 12 13
+    }
+}
 ```
 
 ### Dry Run Example
@@ -538,6 +1301,159 @@ arr = [4, 2, 2, 8, 3, 3, 1]
 print(counting_sort(arr))  # Output: [1, 2, 2, 3, 3, 4, 8]
 ```
 
+### Implementation (C)
+```c
+#include <stdio.h>
+#include <stdlib.h>
+
+void counting_sort(int arr[], int n) {
+    if (n == 0) return;
+    
+    // Find min and max values
+    int max_val = arr[0], min_val = arr[0];
+    for (int i = 1; i < n; i++) {
+        if (arr[i] > max_val) max_val = arr[i];
+        if (arr[i] < min_val) min_val = arr[i];
+    }
+    
+    int range_size = max_val - min_val + 1;
+    
+    // Create count and output arrays
+    int* count = (int*)calloc(range_size, sizeof(int));
+    int* output = (int*)malloc(n * sizeof(int));
+    
+    // Count occurrences
+    for (int i = 0; i < n; i++)
+        count[arr[i] - min_val]++;
+    
+    // Cumulative count
+    for (int i = 1; i < range_size; i++)
+        count[i] += count[i - 1];
+    
+    // Build output array
+    for (int i = n - 1; i >= 0; i--) {
+        output[count[arr[i] - min_val] - 1] = arr[i];
+        count[arr[i] - min_val]--;
+    }
+    
+    // Copy output to arr
+    for (int i = 0; i < n; i++)
+        arr[i] = output[i];
+    
+    free(count);
+    free(output);
+}
+
+// Example
+int main() {
+    int arr[] = {4, 2, 2, 8, 3, 3, 1};
+    int n = sizeof(arr) / sizeof(arr[0]);
+    counting_sort(arr, n);
+    
+    printf("Sorted array: ");
+    for (int i = 0; i < n; i++)
+        printf("%d ", arr[i]);
+    // Output: 1 2 2 3 3 4 8
+    return 0;
+}
+```
+
+### Implementation (C++)
+```cpp
+#include <iostream>
+#include <vector>
+#include <algorithm>
+using namespace std;
+
+vector<int> counting_sort(vector<int> arr) {
+    if (arr.empty()) return arr;
+    
+    int max_val = *max_element(arr.begin(), arr.end());
+    int min_val = *min_element(arr.begin(), arr.end());
+    int range_size = max_val - min_val + 1;
+    
+    vector<int> count(range_size, 0);
+    vector<int> output(arr.size());
+    
+    // Count occurrences
+    for (int num : arr)
+        count[num - min_val]++;
+    
+    // Cumulative count
+    for (int i = 1; i < range_size; i++)
+        count[i] += count[i - 1];
+    
+    // Build output array
+    for (int i = arr.size() - 1; i >= 0; i--) {
+        output[count[arr[i] - min_val] - 1] = arr[i];
+        count[arr[i] - min_val]--;
+    }
+    
+    return output;
+}
+
+// Example
+int main() {
+    vector<int> arr = {4, 2, 2, 8, 3, 3, 1};
+    arr = counting_sort(arr);
+    
+    cout << "Sorted array: ";
+    for (int num : arr)
+        cout << num << " ";
+    // Output: 1 2 2 3 3 4 8
+    return 0;
+}
+```
+
+### Implementation (Java)
+```java
+public class CountingSort {
+    public static int[] countingSort(int[] arr) {
+        if (arr.length == 0) return arr;
+        
+        // Find min and max values
+        int max_val = arr[0], min_val = arr[0];
+        for (int i = 1; i < arr.length; i++) {
+            if (arr[i] > max_val) max_val = arr[i];
+            if (arr[i] < min_val) min_val = arr[i];
+        }
+        
+        int range_size = max_val - min_val + 1;
+        
+        // Create count and output arrays
+        int[] count = new int[range_size];
+        int[] output = new int[arr.length];
+        
+        // Count occurrences
+        for (int num : arr)
+            count[num - min_val]++;
+        
+        // Cumulative count
+        for (int i = 1; i < range_size; i++)
+            count[i] += count[i - 1];
+        
+        // Build output array
+        for (int i = arr.length - 1; i >= 0; i--) {
+            output[count[arr[i] - min_val] - 1] = arr[i];
+            count[arr[i] - min_val]--;
+        }
+        
+        return output;
+    }
+    
+    // Example
+    public static void main(String[] args) {
+        int[] arr = {4, 2, 2, 8, 3, 3, 1};
+        arr = countingSort(arr);
+        
+        System.out.print("Sorted array: ");
+        for (int num : arr)
+            System.out.print(num + " ");
+        // Output: 1 2 2 3 3 4 8
+    }
+}
+```
+
 ### Complexity Analysis
 - **Time Complexity**: O(n + k) where k is range
 - **Space Complexity**: O(n + k)
@@ -592,6 +1508,173 @@ def radix_sort(arr):
 # Example
 arr = [170, 45, 75, 90, 802, 24, 2, 66]
 print(radix_sort(arr))  # Output: [2, 24, 45, 66, 75, 90, 170, 802]
+```
+
+### Implementation (C)
+```c
+#include <stdio.h>
+
+void counting_sort_for_radix(int arr[], int n, int exp) {
+    int output[n];
+    int count[10] = {0};
+    
+    // Count occurrences
+    for (int i = 0; i < n; i++) {
+        int index = (arr[i] / exp) % 10;
+        count[index]++;
+    }
+    
+    // Cumulative count
+    for (int i = 1; i < 10; i++)
+        count[i] += count[i - 1];
+    
+    // Build output array
+    for (int i = n - 1; i >= 0; i--) {
+        int index = (arr[i] / exp) % 10;
+        output[count[index] - 1] = arr[i];
+        count[index]--;
+    }
+    
+    // Copy output to arr
+    for (int i = 0; i < n; i++)
+        arr[i] = output[i];
+}
+
+void radix_sort(int arr[], int n) {
+    // Find maximum value
+    int max_val = arr[0];
+    for (int i = 1; i < n; i++)
+        if (arr[i] > max_val)
+            max_val = arr[i];
+    
+    // Sort by each digit
+    for (int exp = 1; max_val / exp > 0; exp *= 10)
+        counting_sort_for_radix(arr, n, exp);
+}
+
+// Example
+int main() {
+    int arr[] = {170, 45, 75, 90, 802, 24, 2, 66};
+    int n = sizeof(arr) / sizeof(arr[0]);
+    radix_sort(arr, n);
+    
+    printf("Sorted array: ");
+    for (int i = 0; i < n; i++)
+        printf("%d ", arr[i]);
+    // Output: 2 24 45 66 75 90 170 802
+    return 0;
+}
+```
+
+### Implementation (C++)
+```cpp
+#include <iostream>
+#include <vector>
+#include <algorithm>
+using namespace std;
+
+void counting_sort_for_radix(vector<int>& arr, int exp) {
+    int n = arr.size();
+    vector<int> output(n);
+    vector<int> count(10, 0);
+    
+    // Count occurrences
+    for (int i = 0; i < n; i++) {
+        int index = (arr[i] / exp) % 10;
+        count[index]++;
+    }
+    
+    // Cumulative count
+    for (int i = 1; i < 10; i++)
+        count[i] += count[i - 1];
+    
+    // Build output array
+    for (int i = n - 1; i >= 0; i--) {
+        int index = (arr[i] / exp) % 10;
+        output[count[index] - 1] = arr[i];
+        count[index]--;
+    }
+    
+    // Copy output to arr
+    for (int i = 0; i < n; i++)
+        arr[i] = output[i];
+}
+
+void radix_sort(vector<int>& arr) {
+    // Find maximum value
+    int max_val = *max_element(arr.begin(), arr.end());
+    
+    // Sort by each digit
+    for (int exp = 1; max_val / exp > 0; exp *= 10)
+        counting_sort_for_radix(arr, exp);
+}
+
+// Example
+int main() {
+    vector<int> arr = {170, 45, 75, 90, 802, 24, 2, 66};
+    radix_sort(arr);
+    
+    cout << "Sorted array: ";
+    for (int num : arr)
+        cout << num << " ";
+    // Output: 2 24 45 66 75 90 170 802
+    return 0;
+}
+```
+
+### Implementation (Java)
+```java
+public class RadixSort {
+    public static void countingSortForRadix(int[] arr, int exp) {
+        int n = arr.length;
+        int[] output = new int[n];
+        int[] count = new int[10];
+        
+        // Count occurrences
+        for (int i = 0; i < n; i++) {
+            int index = (arr[i] / exp) % 10;
+            count[index]++;
+        }
+        
+        // Cumulative count
+        for (int i = 1; i < 10; i++)
+            count[i] += count[i - 1];
+        
+        // Build output array
+        for (int i = n - 1; i >= 0; i--) {
+            int index = (arr[i] / exp) % 10;
+            output[count[index] - 1] = arr[i];
+            count[index]--;
+        }
+        
+        // Copy output to arr
+        for (int i = 0; i < n; i++)
+            arr[i] = output[i];
+    }
+    
+    public static void radixSort(int[] arr) {
+        // Find maximum value
+        int max_val = arr[0];
+        for (int i = 1; i < arr.length; i++)
+            if (arr[i] > max_val)
+                max_val = arr[i];
+        
+        // Sort by each digit
+        for (int exp = 1; max_val / exp > 0; exp *= 10)
+            countingSortForRadix(arr, exp);
+    }
+    
+    // Example
+    public static void main(String[] args) {
+        int[] arr = {170, 45, 75, 90, 802, 24, 2, 66};
+        radixSort(arr);
+        
+        System.out.print("Sorted array: ");
+        for (int num : arr)
+            System.out.print(num + " ");
+        // Output: 2 24 45 66 75 90 170 802
+    }
+}
 ```
 
 ### Complexity Analysis
