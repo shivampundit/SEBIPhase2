@@ -46,6 +46,9 @@ void backtrack(int* candidate, int size) {
             remove_item(candidates[i]);  // Backtrack
         }
     }
+    
+    // Caller is responsible for freeing candidates if dynamically allocated
+    free(candidates);
 }
 ```
 
@@ -89,6 +92,7 @@ public class Backtracking {
             if (isValid(nextCandidate)) {
                 candidate.add(nextCandidate);
                 backtrack(candidate);
+                // Remove last element (O(1) for ArrayList)
                 candidate.remove(candidate.size() - 1);  // Backtrack
             }
         }
