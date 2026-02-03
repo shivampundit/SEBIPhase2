@@ -1489,14 +1489,14 @@ def calculate_discount(price):
 # ✅ Good
 LARGE_ORDER_THRESHOLD = 1000
 MEDIUM_ORDER_THRESHOLD = 500
-LARGE_ORDER_DISCOUNT = 0.1
-MEDIUM_ORDER_DISCOUNT = 0.05
+LARGE_ORDER_DISCOUNT_RATE = 0.1
+MEDIUM_ORDER_DISCOUNT_RATE = 0.05
 
 def calculate_discount(price):
     if price > LARGE_ORDER_THRESHOLD:
-        return price * LARGE_ORDER_DISCOUNT
+        return price * LARGE_ORDER_DISCOUNT_RATE
     elif price > MEDIUM_ORDER_THRESHOLD:
-        return price * MEDIUM_ORDER_DISCOUNT
+        return price * MEDIUM_ORDER_DISCOUNT_RATE
     return 0
 ```
 

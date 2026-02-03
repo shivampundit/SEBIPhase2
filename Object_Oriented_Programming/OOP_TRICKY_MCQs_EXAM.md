@@ -1856,7 +1856,7 @@ class Rectangle(Shape):
 
 def collide(s1, s2):
     method_name = f"collide_{type(s1).__name__}_{type(s2).__name__}"
-    return globals().get(method_name, lambda x, y: "Unknown")
+    return globals().get(method_name, lambda x, y: "Unknown")(s1, s2)
 
 def collide_Circle_Circle(c1, c2):
     return "Circle-Circle"
